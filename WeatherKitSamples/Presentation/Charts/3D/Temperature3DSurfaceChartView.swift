@@ -175,9 +175,11 @@ struct Temperature3DSurfaceChartView: View {
                 .foregroundStyle(.secondary)
 
             // swiftlint:disable:next line_length
-            Text("Displays temperature as a continuous surface over a day-hour grid. SurfacePlot renders mathematical functions as smooth 3D surfaces, interpolating between data points for visual continuity.")
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
+            Text(
+                "Displays temperature as a continuous surface over a day-hour grid. SurfacePlot renders mathematical functions as smooth 3D surfaces, interpolating between data points for visual continuity."
+            )
+            .font(.caption2)
+            .foregroundStyle(.tertiary)
         }
     }
 }

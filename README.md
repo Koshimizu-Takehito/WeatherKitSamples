@@ -80,7 +80,9 @@ This project follows a 3-layer Clean Architecture pattern.
 ```
 WeatherKitSamples/
 ├── App/                    # Application entry point & DI
-├── Core/Extensions/        # Shared utilities
+├── Core/
+│   ├── Extensions/         # Environment keys, UI helpers
+│   └── WeatherFormatters.swift  # Formatting utilities
 ├── Domain/
 │   ├── Entities/           # Domain models
 │   ├── Interfaces/         # Repository protocols

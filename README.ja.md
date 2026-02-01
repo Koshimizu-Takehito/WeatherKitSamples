@@ -80,7 +80,9 @@ WeatherKit の設定なしで動作確認する場合は、`AppDependencies(isMo
 ```
 WeatherKitSamples/
 ├── App/                    # アプリケーションエントリポイント & DI
-├── Core/Extensions/        # 共通ユーティリティ
+├── Core/
+│   ├── Extensions/         # Environment キー、UI ヘルパー
+│   └── WeatherFormatters.swift  # フォーマットユーティリティ
 ├── Domain/
 │   ├── Entities/           # ドメインモデル
 │   ├── Interfaces/         # リポジトリプロトコル
