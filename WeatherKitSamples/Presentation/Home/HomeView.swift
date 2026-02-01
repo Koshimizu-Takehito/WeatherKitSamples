@@ -2,7 +2,21 @@ import SwiftUI
 
 // MARK: - HomeView
 
-/// ホーム画面のView
+/// The main home screen displaying weather information.
+///
+/// Switches between child views based on ``HomeViewModel/State``:
+/// ``HomeInitialView``, ``HomeLoadingView``, ``HomeWeatherContentView``,
+/// or ``HomeErrorView``.
+///
+/// ## Learning Points
+/// - **State-driven routing**: A `switch` on the ViewModel's state enum
+///   maps each case to a dedicated child view.
+/// - **Method references**: Closures like `content:` accept method references
+///   (e.g., `contentView`) to keep `body` flat and readable.
+/// - **Environment-based DI**: The ViewModel is obtained from `@Environment`,
+///   not passed as a parameter.
+///
+/// - SeeAlso: ``HomeViewModel`` for the state management logic.
 struct HomeView {
     @Environment(HomeViewModel.self) private var viewModel
     @State private var isShowingLocationSearch = false

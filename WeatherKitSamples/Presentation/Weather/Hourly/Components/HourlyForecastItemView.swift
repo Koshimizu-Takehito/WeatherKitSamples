@@ -2,7 +2,9 @@ import SwiftUI
 
 // MARK: - HourlyForecastItemView
 
-/// 時間別予報の1時間分を表示するコンポーネント
+/// Renders a single hour's forecast with time, icon, temperature, and precipitation.
+///
+/// Used as a child of ``HourlyForecastView`` inside the horizontal scroll.
 struct HourlyForecastItemView {
     let forecast: HourlyForecastEntity
 

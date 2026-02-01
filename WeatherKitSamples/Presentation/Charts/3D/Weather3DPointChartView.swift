@@ -2,18 +2,37 @@ import Charts
 import Spatial
 import SwiftUI
 
-/// 3Dポイントグラフビュー
-/// Swift Charts の Chart3D + PointMark (with z) のサンプル
-/// 時間×気温×降水確率を3D空間にプロット
+/// A 3D scatter plot view displaying weather data points.
+///
+/// Demonstrates the use of `Chart3D` with `PointMark` using the z-axis
+/// to plot time, temperature, and precipitation in 3D space.
+///
+/// ## Swift Charts 3D Techniques
+///
+/// - **PointMark with z-axis**: Creates 3D scatter plot points.
+/// - **Dynamic Coloring**: Points colored based on selectable criteria.
+/// - **Variable Symbol Size**: Point size scales with precipitation chance.
+/// - **chart3DPose**: Sets initial camera angle for optimal viewing.
+///
+/// ## Learning Points
+///
+/// - Using `Chart3D` container for 3D visualizations
+/// - Adding z-axis dimension to existing marks
+/// - Implementing multiple color modes for data exploration
+/// - Gesture-based interaction for 3D charts
+///
+/// - SeeAlso: [PointMark](https://developer.apple.com/documentation/charts/pointmark)
 struct Weather3DPointChartView: View {
+    /// The 3D data points to display.
     let data: [Chart3DDataPoint]
 
     @State private var colorMode: ColorMode = .temperature
 
+    /// Color mode options for point visualization.
     enum ColorMode: String, CaseIterable {
-        case temperature = "気温"
-        case precipitation = "降水確率"
-        case period = "時間帯"
+        case temperature = "Temperature"
+        case precipitation = "Precipitation"
+        case period = "Time Period"
     }
 
     var body: some View {
@@ -35,11 +54,11 @@ struct Weather3DPointChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("3D ポイントグラフ", systemImage: "circle.hexagongrid")
+            Label("3D Point Chart", systemImage: "circle.hexagongrid")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("時間 × 気温 × 降水確率")
+            Text("Hour x Temperature x Precipitation")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -48,7 +67,7 @@ struct Weather3DPointChartView: View {
     // MARK: - Color Mode Picker
 
     private var colorModePicker: some View {
-        Picker("色分け", selection: $colorMode) {
+        Picker("Color by", selection: $colorMode) {
             ForEach(ColorMode.allCases, id: \.self) { mode in
                 Text(mode.rawValue).tag(mode)
             }
@@ -58,12 +77,21 @@ struct Weather3DPointChartView: View {
 
     // MARK: - 3D Chart View
 
+    /// The 3D chart using PointMark with z-axis.
+    ///
+    /// ## Implementation Notes
+    ///
+    /// - X-axis: Hour of day (0-23)
+    /// - Y-axis: Temperature in Celsius
+    /// - Z-axis: Precipitation probability (0-100%)
+    /// - Point color: Based on selected color mode
+    /// - Point size: Scales with precipitation chance
     private var chart3DView: some View {
         Chart3D(data) { item in
             PointMark(
-                x: .value("時間", item.hour),
-                y: .value("気温", item.temperature),
-                z: .value("降水確率", item.precipitationChance * 100)
+                x: .value("Hour", item.hour),
+                y: .value("Temperature", item.temperature),
+                z: .value("Precipitation", item.precipitationChance * 100)
             )
             .foregroundStyle(pointColor(for: item))
             .symbolSize(symbolSize(for: item))
@@ -90,14 +118,14 @@ struct Weather3DPointChartView: View {
 
     private var temperatureLegend: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("気温による色分け")
+            Text("Color by Temperature")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
             HStack(spacing: 12) {
-                legendItem(color: .cyan, text: "低温")
-                legendItem(color: .green, text: "適温")
-                legendItem(color: .orange, text: "高温")
+                legendItem(color: .cyan, text: "Low")
+                legendItem(color: .green, text: "Moderate")
+                legendItem(color: .orange, text: "High")
             }
             .font(.caption2)
         }
@@ -105,7 +133,7 @@ struct Weather3DPointChartView: View {
 
     private var precipitationLegend: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("降水確率による色分け")
+            Text("Color by Precipitation")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -120,15 +148,15 @@ struct Weather3DPointChartView: View {
 
     private var periodLegend: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("時間帯による色分け")
+            Text("Color by Time Period")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
             HStack(spacing: 12) {
-                legendItem(color: .yellow, text: "朝")
-                legendItem(color: .orange, text: "昼")
-                legendItem(color: .purple, text: "夕")
-                legendItem(color: .indigo, text: "夜")
+                legendItem(color: .yellow, text: "Morning")
+                legendItem(color: .orange, text: "Afternoon")
+                legendItem(color: .purple, text: "Evening")
+                legendItem(color: .indigo, text: "Night")
             }
             .font(.caption2)
         }

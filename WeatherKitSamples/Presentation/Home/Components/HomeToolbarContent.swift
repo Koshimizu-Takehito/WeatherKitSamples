@@ -2,7 +2,16 @@ import SwiftUI
 
 // MARK: - Home Toolbar Content
 
-/// ホーム画面のツールバーコンテンツ
+/// Toolbar buttons for the home screen.
+///
+/// Provides chart, search, and current-location buttons. Uses conditional
+/// compilation (`#if os(macOS)`) to adjust toolbar placement per platform.
+///
+/// ## Learning Points
+/// - **`ToolbarContent` protocol**: Extracts toolbar items into a
+///   dedicated struct, keeping the parent View's `body` clean.
+/// - **Platform adaptation**: `#if os()` allows different `placement`
+///   values for iOS and macOS without duplicating button definitions.
 struct HomeToolbarContent: ToolbarContent {
     @Environment(HomeViewModel.self) private var viewModel
     @Binding var isShowingCharts: Bool

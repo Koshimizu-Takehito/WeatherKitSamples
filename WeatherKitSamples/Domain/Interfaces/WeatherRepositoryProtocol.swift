@@ -3,33 +3,59 @@ import Foundation
 
 // MARK: - WeatherRepositoryProtocol
 
-/// 天気データのリポジトリインターフェース
-/// Domain層では具象実装を知らず、このプロトコルのみに依存する
+/// A repository interface for fetching weather data.
+///
+/// This protocol defines the contract for weather data access in the domain layer.
+/// The domain layer depends only on this protocol, not on concrete implementations,
+/// enabling easy substitution of data sources (e.g., WeatherKit API vs. mock data).
+///
+/// ## Overview
+///
+/// In Clean Architecture, repository protocols live in the domain layer and are
+/// implemented by the data layer. This inversion of dependencies keeps the domain
+/// layer free from framework-specific code.
+///
+/// - SeeAlso: ``WeatherEntity`` for the returned weather data structure.
+/// - SeeAlso: ``WeatherRepositoryError`` for possible errors.
 protocol WeatherRepositoryProtocol: Sendable {
-    /// 指定された位置の天気情報を取得する
-    /// - Parameter location: 位置情報
-    /// - Returns: 天気エンティティ
+    /// Fetches weather information for the specified location.
+    ///
+    /// - Parameter location: The geographic location to fetch weather for.
+    /// - Returns: A ``WeatherEntity`` containing current conditions and forecasts.
+    /// - Throws: ``WeatherRepositoryError`` if the fetch operation fails.
     func fetchWeather(for location: CLLocation) async throws -> WeatherEntity
 }
 
 // MARK: - WeatherRepositoryError
 
-/// 天気リポジトリのエラー
+/// Errors that can occur during weather data retrieval.
+///
+/// These errors are thrown by ``WeatherRepositoryProtocol`` implementations
+/// when weather data cannot be fetched successfully.
+///
+/// - ``fetchFailed(underlying:)``: The underlying API request failed.
+/// - ``invalidData``: The response data could not be parsed or validated.
+/// - ``networkError``: A network connectivity issue prevented the request.
 enum WeatherRepositoryError: LocalizedError {
+    /// The weather fetch operation failed with an underlying error.
     case fetchFailed(underlying: Error)
+
+    /// The received weather data was invalid or could not be parsed.
     case invalidData
+
+    /// A network error occurred during the request.
     case networkError
 
     var errorDescription: String? {
         switch self {
         case let .fetchFailed(error):
-            "天気情報の取得に失敗しました: \(error.localizedDescription)"
+            "Failed to fetch weather data: \(error.localizedDescription)"
 
         case .invalidData:
-            "天気データが無効です"
+            "Invalid weather data received"
 
         case .networkError:
-            "ネットワークエラーが発生しました"
+            "A network error occurred"
         }
     }
 }

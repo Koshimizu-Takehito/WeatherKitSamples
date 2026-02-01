@@ -2,7 +2,12 @@ import SwiftUI
 
 // MARK: - DailyForecastView
 
-/// 日ごとの予報を表示するView
+/// Displays a 10-day weather forecast in a vertical list.
+///
+/// Each day is rendered by ``DailyForecastItemView`` with a temperature
+/// range bar normalized across the entire forecast period.
+///
+/// - SeeAlso: ``DailyForecastEntity`` for the underlying data model.
 struct DailyForecastView {
     let forecast: [DailyForecastEntity]
 }

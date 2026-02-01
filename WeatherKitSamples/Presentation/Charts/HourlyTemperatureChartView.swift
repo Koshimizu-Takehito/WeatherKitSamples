@@ -1,9 +1,29 @@
 import Charts
 import SwiftUI
 
-/// 時間ごとの気温チャートビュー
-/// Swift Charts の LineMark, AreaMark, PointMark のサンプル
+/// A chart view displaying hourly temperature trends.
+///
+/// Demonstrates the use of `LineMark`, `AreaMark`, and `PointMark`
+/// from Swift Charts to create an interactive temperature visualization.
+///
+/// ## Swift Charts Techniques
+///
+/// - **LineMark**: Creates a continuous line connecting temperature data points.
+/// - **AreaMark**: Fills the area under the line with a gradient.
+/// - **PointMark**: Adds interactive markers at each data point.
+/// - **Interpolation**: Uses `.catmullRom` for smooth curves.
+/// - **Chart Overlay**: Implements drag gesture for data selection.
+///
+/// ## Learning Points
+///
+/// - Combining multiple mark types in a single chart
+/// - Using `chartOverlay` for custom gesture handling
+/// - Calculating chart value from gesture position with `ChartProxy`
+/// - Animating selection changes with `.animation` modifier
+///
+/// - SeeAlso: [Creating a chart using Swift Charts](https://developer.apple.com/documentation/charts/creating-a-chart-using-swift-charts)
 struct HourlyTemperatureChartView: View {
+    /// The hourly data to display in the chart.
     let data: [HourlyChartData]
 
     @State private var selectedData: HourlyChartData?
@@ -38,11 +58,11 @@ struct HourlyTemperatureChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("気温の推移", systemImage: "thermometer.medium")
+            Label("Temperature Trend", systemImage: "thermometer.medium")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("24時間の気温変化")
+            Text("24-hour temperature changes")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -50,20 +70,28 @@ struct HourlyTemperatureChartView: View {
 
     // MARK: - Chart View
 
+    /// The main chart combining LineMark, AreaMark, and PointMark.
+    ///
+    /// ## Implementation Notes
+    ///
+    /// - AreaMark is rendered first (bottom layer)
+    /// - LineMark is rendered on top of the area
+    /// - PointMark provides interactive selection targets
+    /// - `.catmullRom` interpolation creates smooth curves
     private var chartView: some View {
         Chart(data) { item in
             if showArea {
                 AreaMark(
-                    x: .value("時間", item.date),
-                    y: .value("気温", item.temperature)
+                    x: .value("Time", item.date),
+                    y: .value("Temperature", item.temperature)
                 )
                 .foregroundStyle(areaGradient)
                 .interpolationMethod(.catmullRom)
             }
 
             LineMark(
-                x: .value("時間", item.date),
-                y: .value("気温", item.temperature)
+                x: .value("Time", item.date),
+                y: .value("Temperature", item.temperature)
             )
             .foregroundStyle(Color.orange)
             .lineStyle(StrokeStyle(lineWidth: 2))
@@ -71,8 +99,8 @@ struct HourlyTemperatureChartView: View {
 
             if showPoints {
                 PointMark(
-                    x: .value("時間", item.date),
-                    y: .value("気温", item.temperature)
+                    x: .value("Time", item.date),
+                    y: .value("Temperature", item.temperature)
                 )
                 .foregroundStyle(Color.orange)
                 .symbolSize(selectedData?.id == item.id ? 100 : 30)
@@ -119,7 +147,7 @@ struct HourlyTemperatureChartView: View {
     private var chartOptionsView: some View {
         HStack(spacing: 16) {
             Toggle(isOn: $showArea) {
-                Label("エリア", systemImage: "square.fill")
+                Label("Area", systemImage: "square.fill")
                     .font(.caption)
             }
             .toggleStyle(.button)
@@ -127,7 +155,7 @@ struct HourlyTemperatureChartView: View {
             .tint(showArea ? .orange : .gray)
 
             Toggle(isOn: $showPoints) {
-                Label("ポイント", systemImage: "circle.fill")
+                Label("Points", systemImage: "circle.fill")
                     .font(.caption)
             }
             .toggleStyle(.button)
@@ -181,6 +209,10 @@ struct HourlyTemperatureChartView: View {
         )
     }
 
+    /// Converts gesture location to chart data selection.
+    ///
+    /// Uses `ChartProxy.value(atX:)` to convert screen coordinates
+    /// to data values, then finds the nearest data point.
     private func updateSelection(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) {
         let xPosition = location.x - geometry[proxy.plotFrame!].origin.x
 

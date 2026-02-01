@@ -2,10 +2,27 @@ import Charts
 import Spatial
 import SwiftUI
 
-/// 3D棒グラフビュー
-/// Swift Charts の Chart3D + PointMark (with z) のサンプル
-/// 日付×時間帯×気温を3D空間で表示
+/// A 3D bar chart view displaying temperature by day and time period.
+///
+/// Demonstrates the use of `Chart3D` with `PointMark` and z-axis
+/// to visualize date, time period, and temperature in 3D space.
+///
+/// ## Swift Charts 3D Techniques
+///
+/// - **PointMark with z-axis**: Uses z for temperature values.
+/// - **Categorical Axes**: Date and time period as categorical dimensions.
+/// - **Temperature-based Coloring**: Visual encoding of temperature range.
+/// - **chart3DPose**: Camera positioning for optimal data view.
+///
+/// ## Learning Points
+///
+/// - Using categorical data on x and y axes with numeric z
+/// - Color coding for additional data dimension
+/// - Aggregated period data for cleaner 3D visualization
+///
+/// - SeeAlso: ``Chart3DPeriodData`` for the aggregated data structure.
 struct Temperature3DBarChartView: View {
+    /// The aggregated period data to display.
     let data: [Chart3DPeriodData]
 
     var body: some View {
@@ -25,11 +42,11 @@ struct Temperature3DBarChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("3D 気温グラフ", systemImage: "cube")
+            Label("3D Temperature Chart", systemImage: "cube")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("日付 × 時間帯 × 気温")
+            Text("Date x Time Period x Temperature")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -37,12 +54,19 @@ struct Temperature3DBarChartView: View {
 
     // MARK: - 3D Chart View
 
+    /// The 3D chart with categorical x/y axes and numeric z.
+    ///
+    /// ## Axis Mapping
+    ///
+    /// - X-axis: Date (categorical)
+    /// - Y-axis: Time period (categorical: Morning, Afternoon, Evening, Night)
+    /// - Z-axis: Average temperature during that period
     private var chart3DView: some View {
         Chart3D(data) { item in
             PointMark(
-                x: .value("日付", item.dayString),
-                y: .value("時間帯", item.period.rawValue),
-                z: .value("気温", item.averageTemperature)
+                x: .value("Date", item.dayString),
+                y: .value("Period", item.period.rawValue),
+                z: .value("Temperature", item.averageTemperature)
             )
             .foregroundStyle(temperatureColor(for: item.averageTemperature))
             .symbolSize(100)
@@ -54,14 +78,14 @@ struct Temperature3DBarChartView: View {
 
     private var legendView: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("気温による色分け")
+            Text("Color by Temperature")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
             HStack(spacing: 16) {
-                legendItem(color: .cyan, text: "低温 (<15°C)")
-                legendItem(color: .green, text: "適温 (15-20°C)")
-                legendItem(color: .orange, text: "高温 (>20°C)")
+                legendItem(color: .cyan, text: "Low (<15°C)")
+                legendItem(color: .green, text: "Moderate (15-20°C)")
+                legendItem(color: .orange, text: "High (>20°C)")
             }
             .font(.caption2)
         }

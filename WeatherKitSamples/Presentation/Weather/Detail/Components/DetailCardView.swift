@@ -2,7 +2,13 @@ import SwiftUI
 
 // MARK: - DetailCardView
 
-/// 天気詳細のカードコンポーネント
+/// A reusable card displaying a single weather metric with an icon.
+///
+/// Composed of a colored icon label, a prominent value, and a secondary
+/// description. Styled with `.ultraThinMaterial` for the translucent
+/// background used throughout the weather detail section.
+///
+/// - SeeAlso: ``DetailLabelStyle`` for the custom icon-coloring label style.
 struct DetailCardView {
     let title: String
     let value: String

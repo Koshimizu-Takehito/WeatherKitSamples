@@ -2,14 +2,33 @@ import Charts
 import Spatial
 import SwiftUI
 
-/// 3D折れ線グラフビュー
-/// Swift Charts の Chart3D + RuleMark/PointMark (with z) のサンプル
-/// 複数日の気温推移を3D空間で比較表示
+/// A 3D chart view comparing temperature trends across multiple days.
+///
+/// Demonstrates the use of `Chart3D` with `PointMark` to visualize
+/// multi-day temperature data in 3D space for comparison.
+///
+/// ## Swift Charts 3D Techniques
+///
+/// - **Multi-Series Visualization**: Each day as a separate series.
+/// - **Day-based Coloring**: Different colors for each day.
+/// - **Toggle Interaction**: Show/hide days for focused comparison.
+/// - **chart3DPose**: Camera angle for multi-series comparison.
+///
+/// ## Learning Points
+///
+/// - Visualizing multiple data series in 3D space
+/// - Using day index as a spatial dimension
+/// - Interactive filtering with toggle controls
+/// - Color-coding series for easy identification
+///
+/// - SeeAlso: ``Chart3DDataPoint`` for the data structure.
 struct DailyTemperature3DLineChartView: View {
+    /// Multi-day hourly data, grouped by day.
     let multiDayData: [[HourlyChartData]]
 
     @State private var showAllDays: Bool = true
 
+    /// Processes raw data into 3D data points.
     private var processedData: [Chart3DDataPoint] {
         var result: [Chart3DDataPoint] = []
         let calendar = Calendar.current
@@ -52,11 +71,11 @@ struct DailyTemperature3DLineChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("3D 気温推移グラフ", systemImage: "chart.line.uptrend.xyaxis")
+            Label("3D Temperature Trend", systemImage: "chart.line.uptrend.xyaxis")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("複数日の気温推移を比較")
+            Text("Compare temperature trends across days")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -65,19 +84,26 @@ struct DailyTemperature3DLineChartView: View {
     // MARK: - Toggle View
 
     private var toggleView: some View {
-        Toggle("全ての日を表示", isOn: $showAllDays)
+        Toggle("Show All Days", isOn: $showAllDays)
             .font(.subheadline)
             .tint(.accentColor)
     }
 
     // MARK: - 3D Chart View
 
+    /// The 3D chart for multi-day comparison.
+    ///
+    /// ## Axis Mapping
+    ///
+    /// - X-axis: Hour of day (0-23)
+    /// - Y-axis: Day index (0, 1, 2...)
+    /// - Z-axis: Temperature in Celsius
     private var chart3DView: some View {
         Chart3D(processedData) { item in
             PointMark(
-                x: .value("時間", item.hour),
-                y: .value("日", item.dayIndex),
-                z: .value("気温", item.temperature)
+                x: .value("Hour", item.hour),
+                y: .value("Day", item.dayIndex),
+                z: .value("Temperature", item.temperature)
             )
             .foregroundStyle(dayColor(for: item.dayIndex))
             .symbolSize(60)
@@ -90,7 +116,7 @@ struct DailyTemperature3DLineChartView: View {
 
     private var legendView: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("日ごとの色分け")
+            Text("Color by Day")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -122,10 +148,10 @@ struct DailyTemperature3DLineChartView: View {
 
     private func dayLabel(for index: Int) -> String {
         switch index {
-        case 0: "今日"
-        case 1: "明日"
-        case 2: "明後日"
-        default: "\(index + 1)日目"
+        case 0: "Today"
+        case 1: "Tomorrow"
+        case 2: "Day After"
+        default: "Day \(index + 1)"
         }
     }
 }

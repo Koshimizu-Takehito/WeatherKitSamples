@@ -2,7 +2,10 @@ import SwiftUI
 
 // MARK: - Detail Label Style
 
-/// 天気詳細カード用のラベルスタイル
+/// A custom `LabelStyle` that applies a specific color to the icon.
+///
+/// Used by ``DetailCardView`` to tint each card's SF Symbol independently
+/// while keeping the title in the default style.
 struct DetailLabelStyle: LabelStyle {
     let iconColor: Color
 

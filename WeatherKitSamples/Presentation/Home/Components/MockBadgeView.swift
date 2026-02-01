@@ -2,7 +2,10 @@ import SwiftUI
 
 // MARK: - Mock Badge View
 
-/// モックデータモードを示すバッジView
+/// A capsule badge indicating that mock data is in use.
+///
+/// Displayed at the top of ``HomeWeatherContentView`` when the app is
+/// running with ``MockWeatherDataSource`` enabled.
 struct MockBadgeView: View {
     var body: some View {
         Text("モックデータモード")

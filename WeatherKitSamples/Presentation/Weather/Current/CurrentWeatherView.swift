@@ -2,7 +2,13 @@ import SwiftUI
 
 // MARK: - CurrentWeatherView
 
-/// 現在の天気情報を表示するView
+/// Displays the current weather conditions with temperature and location name.
+///
+/// Shows the SF Symbol for the current condition, the temperature,
+/// a condition description, apparent temperature, and today's high/low
+/// range when a ``DailyForecastEntity`` is provided.
+///
+/// - SeeAlso: ``CurrentWeatherEntity`` for the underlying data model.
 struct CurrentWeatherView {
     let weather: CurrentWeatherEntity
     let locationName: String

@@ -2,7 +2,18 @@ import SwiftUI
 
 // MARK: - DailyForecastItemView
 
-/// 日別予報の1行分を表示するコンポーネント
+/// Renders a single day's forecast row with day label, icon, and temperature bar.
+///
+/// The temperature bar uses `GeometryReader` to calculate the proportional
+/// width and offset based on the overall `temperatureRange` provided by
+/// the parent ``DailyForecastView``.
+///
+/// ## Learning Points
+/// - **Normalized bar chart**: The `temperatureRange` parameter represents
+///   the global min/max across all forecast days, ensuring bars are visually
+///   comparable.
+/// - **Relative date labels**: Today and tomorrow are shown as "今日"/"明日"
+///   instead of day-of-week abbreviations.
 struct DailyForecastItemView {
     let forecast: DailyForecastEntity
     let temperatureRange: ClosedRange<Double>

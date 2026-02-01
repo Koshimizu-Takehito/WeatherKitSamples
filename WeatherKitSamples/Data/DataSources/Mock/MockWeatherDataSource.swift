@@ -3,10 +3,43 @@ import Foundation
 
 // MARK: - MockWeatherDataSource
 
-/// モックデータを返すデータソース（開発・テスト用）
+/// A mock data source that returns sample weather data for development and testing.
+///
+/// This implementation provides realistic weather data without requiring
+/// WeatherKit entitlements or network connectivity, making it ideal for:
+/// - UI development and prototyping
+/// - Unit and integration testing
+/// - Demo and presentation purposes
+///
+/// ## Overview
+///
+/// The mock data source generates:
+/// - Current weather conditions with typical values
+/// - 24-hour hourly forecast with varying conditions
+/// - 10-day daily forecast with temperature ranges
+///
+/// ## Usage
+///
+/// Enable mock mode in `AppDependencies`:
+///
+/// ```swift
+/// let dependencies = AppDependencies(isMockDataEnabled: true)
+/// ```
+///
+/// ## Learning Points
+///
+/// - **Simulated Latency**: Includes a 500ms delay to simulate network requests.
+/// - **Realistic Data**: Generated data follows typical weather patterns.
+/// - **Testability**: Enables UI testing without external dependencies.
+///
+/// - SeeAlso: ``WeatherKitDataSource`` for the production implementation.
 final class MockWeatherDataSource: WeatherDataSourceProtocol, Sendable {
+    /// Fetches mock weather data with a simulated network delay.
+    ///
+    /// - Parameter location: The location (ignored in mock implementation).
+    /// - Returns: A ``WeatherEntity`` with sample weather data.
     func fetchWeather(for _: CLLocation) async throws -> WeatherEntity {
-        // 実際のAPI呼び出しをシミュレートするための遅延
+        // Simulate network latency for realistic behavior
         try await Task.sleep(for: .milliseconds(500))
 
         return WeatherEntity(
@@ -18,17 +51,18 @@ final class MockWeatherDataSource: WeatherDataSourceProtocol, Sendable {
 
     // MARK: - Private Generation Methods
 
+    /// Generates mock current weather conditions.
     private func generateCurrentWeather() -> CurrentWeatherEntity {
         CurrentWeatherEntity(
             temperature: 18.5,
             apparentTemperature: 17.0,
             humidity: 0.65,
             windSpeed: 12.5,
-            windDirection: "北西",
+            windDirection: "NW",
             condition: .clear,
             symbolName: "sun.max.fill",
             uvIndex: 5,
-            uvIndexCategory: "中程度",
+            uvIndexCategory: "Moderate",
             pressure: 1013.25,
             pressureTrend: .steady,
             visibility: 10.0,
@@ -36,33 +70,34 @@ final class MockWeatherDataSource: WeatherDataSourceProtocol, Sendable {
         )
     }
 
+    /// Generates a 24-hour mock hourly forecast.
     private func generateHourlyForecast() -> [HourlyForecastEntity] {
         let now = Date()
         let conditions: [(String, String, Double)] = [
-            ("sun.max.fill", "晴れ", 18),
-            ("sun.max.fill", "晴れ", 19),
-            ("cloud.sun.fill", "晴れ時々曇り", 20),
-            ("cloud.sun.fill", "晴れ時々曇り", 21),
-            ("cloud.fill", "曇り", 20),
-            ("cloud.fill", "曇り", 19),
-            ("cloud.sun.fill", "晴れ時々曇り", 18),
-            ("sun.max.fill", "晴れ", 17),
-            ("moon.stars.fill", "晴れ", 16),
-            ("moon.fill", "晴れ", 15),
-            ("moon.fill", "晴れ", 14),
-            ("moon.fill", "晴れ", 13),
-            ("moon.fill", "晴れ", 12),
-            ("moon.fill", "晴れ", 12),
-            ("sun.horizon.fill", "晴れ", 13),
-            ("sun.max.fill", "晴れ", 15),
-            ("sun.max.fill", "晴れ", 17),
-            ("sun.max.fill", "晴れ", 19),
-            ("sun.max.fill", "晴れ", 21),
-            ("cloud.sun.fill", "晴れ時々曇り", 22),
-            ("cloud.sun.fill", "晴れ時々曇り", 22),
-            ("cloud.fill", "曇り", 21),
-            ("cloud.fill", "曇り", 20),
-            ("cloud.sun.fill", "晴れ時々曇り", 19),
+            ("sun.max.fill", "Clear", 18),
+            ("sun.max.fill", "Clear", 19),
+            ("cloud.sun.fill", "Partly Cloudy", 20),
+            ("cloud.sun.fill", "Partly Cloudy", 21),
+            ("cloud.fill", "Cloudy", 20),
+            ("cloud.fill", "Cloudy", 19),
+            ("cloud.sun.fill", "Partly Cloudy", 18),
+            ("sun.max.fill", "Clear", 17),
+            ("moon.stars.fill", "Clear", 16),
+            ("moon.fill", "Clear", 15),
+            ("moon.fill", "Clear", 14),
+            ("moon.fill", "Clear", 13),
+            ("moon.fill", "Clear", 12),
+            ("moon.fill", "Clear", 12),
+            ("sun.horizon.fill", "Clear", 13),
+            ("sun.max.fill", "Clear", 15),
+            ("sun.max.fill", "Clear", 17),
+            ("sun.max.fill", "Clear", 19),
+            ("sun.max.fill", "Clear", 21),
+            ("cloud.sun.fill", "Partly Cloudy", 22),
+            ("cloud.sun.fill", "Partly Cloudy", 22),
+            ("cloud.fill", "Cloudy", 21),
+            ("cloud.fill", "Cloudy", 20),
+            ("cloud.sun.fill", "Partly Cloudy", 19),
         ]
 
         return conditions.enumerated().map { index, data in
@@ -76,6 +111,7 @@ final class MockWeatherDataSource: WeatherDataSourceProtocol, Sendable {
         }
     }
 
+    /// Generates a 10-day mock daily forecast.
     private func generateDailyForecast() -> [DailyForecastEntity] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -108,7 +144,22 @@ final class MockWeatherDataSource: WeatherDataSourceProtocol, Sendable {
 // MARK: - Multi-Day Hourly Forecast (for 3D Charts)
 
 extension MockWeatherDataSource {
-    /// 複数日分（3日間）の時間ごと予報データを生成
+    /// Generates multi-day (3 days) hourly forecast data for 3D chart visualization.
+    ///
+    /// This method creates detailed hourly data across multiple days,
+    /// which is used to demonstrate 3D charting capabilities with
+    /// temperature variations throughout the day.
+    ///
+    /// ## Data Characteristics
+    ///
+    /// - **Temperature Pattern**: Follows a realistic diurnal cycle
+    ///   (cooler at night, warmer during day).
+    /// - **Day Offset**: Each subsequent day has a slight temperature offset
+    ///   to show variation over time.
+    /// - **Randomization**: Small random variations add realism.
+    ///
+    /// - Returns: An array of arrays, where each inner array contains
+    ///   24 ``HourlyForecastEntity`` items for one day.
     func generateMultiDayHourlyForecast() -> [[HourlyForecastEntity]] {
         let calendar = Calendar.current
         let now = Date()
@@ -116,11 +167,13 @@ extension MockWeatherDataSource {
         return (0 ..< 3).map { dayOffset in
             let dayStart = calendar.date(byAdding: .day, value: dayOffset, to: calendar.startOfDay(for: now))!
 
+            // Typical diurnal temperature pattern (coolest at ~5am, warmest at ~2pm)
             let baseTemps: [Double] = [
                 12, 11, 10, 10, 11, 13, 15, 17, 19, 21, 22, 23,
                 24, 24, 23, 22, 20, 18, 16, 15, 14, 13, 12, 12,
             ]
 
+            // Offset each day's temperatures slightly
             let tempOffset = Double(dayOffset) * 1.5 - 1.5
 
             return (0 ..< 24).map { hour in
@@ -140,7 +193,7 @@ extension MockWeatherDataSource {
                     date: date,
                     temperature: temp,
                     symbolName: symbolName,
-                    condition: precipChance > 0.3 ? "雨" : "晴れ",
+                    condition: precipChance > 0.3 ? "Rain" : "Clear",
                     precipitationChance: precipChance
                 )
             }

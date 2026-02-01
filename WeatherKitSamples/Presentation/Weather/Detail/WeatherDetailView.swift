@@ -2,7 +2,13 @@ import SwiftUI
 
 // MARK: - WeatherDetailView
 
-/// 天気の詳細情報を表示するView
+/// Displays detailed weather metrics in a two-column grid of cards.
+///
+/// Shows UV index, humidity, wind speed, atmospheric pressure, visibility,
+/// and apparent temperature, each as a ``DetailCardView``.
+///
+/// - SeeAlso: ``CurrentWeatherEntity`` for the underlying data.
+/// - SeeAlso: ``DetailCardView`` for the individual card component.
 struct WeatherDetailView {
     let weather: CurrentWeatherEntity
 

@@ -1,19 +1,42 @@
 import Charts
 import SwiftUI
 
-/// 降水確率チャートビュー
-/// Swift Charts の BarMark のサンプル（色分け、アノテーション）
+/// A chart view displaying precipitation probability.
+///
+/// Demonstrates the use of `BarMark` with conditional coloring,
+/// annotations, and threshold indicators using `RuleMark`.
+///
+/// ## Swift Charts Techniques
+///
+/// - **BarMark**: Vertical bars for precipitation percentage.
+/// - **Conditional Coloring**: Bars colored based on precipitation level.
+/// - **RuleMark (Threshold)**: Dashed line indicating high probability threshold.
+/// - **Annotations**: Text labels displayed above bars.
+/// - **Dual Data Views**: Switching between hourly and daily data.
+///
+/// ## Learning Points
+///
+/// - Using `.foregroundStyle` with computed colors
+/// - Adding threshold indicators with `RuleMark`
+/// - Using `.annotation` modifier for value labels
+/// - Implementing data type switching in a single chart view
+///
+/// - SeeAlso: [Customizing charts](https://developer.apple.com/documentation/charts/customizing-charts)
 struct PrecipitationChartView: View {
+    /// Hourly precipitation data.
     let hourlyData: [HourlyChartData]
+
+    /// Daily precipitation data.
     let dailyData: [DailyChartData]
 
     @State private var dataType: DataType = .hourly
     @State private var selectedHourly: HourlyChartData?
     @State private var selectedDaily: DailyChartData?
 
+    /// Data granularity selection.
     enum DataType: String, CaseIterable {
-        case hourly = "時間ごと"
-        case daily = "日ごと"
+        case hourly = "Hourly"
+        case daily = "Daily"
     }
 
     var body: some View {
@@ -41,11 +64,11 @@ struct PrecipitationChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("降水確率", systemImage: "drop.fill")
+            Label("Precipitation", systemImage: "drop.fill")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text(dataType == .hourly ? "24時間の降水確率" : "10日間の降水確率")
+            Text(dataType == .hourly ? "24-hour precipitation probability" : "10-day precipitation probability")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -54,7 +77,7 @@ struct PrecipitationChartView: View {
     // MARK: - Data Type Picker
 
     private var dataTypePickerView: some View {
-        Picker("データタイプ", selection: $dataType) {
+        Picker("Data Type", selection: $dataType) {
             ForEach(DataType.allCases, id: \.self) { type in
                 Text(type.rawValue).tag(type)
             }
@@ -79,18 +102,25 @@ struct PrecipitationChartView: View {
         }
     }
 
+    /// Hourly precipitation chart with threshold line.
+    ///
+    /// ## Implementation Notes
+    ///
+    /// - Bar colors change based on precipitation probability
+    /// - A dashed RuleMark at 50% indicates high probability threshold
+    /// - Drag gesture enables scrubbing through data points
     private var hourlyChartView: some View {
         Chart(hourlyData) { item in
             BarMark(
-                x: .value("時間", item.date),
-                y: .value("降水確率", item.precipitationChance * 100)
+                x: .value("Time", item.date),
+                y: .value("Precipitation", item.precipitationChance * 100)
             )
             .foregroundStyle(precipitationColor(for: item.precipitationChance))
             .cornerRadius(2)
             .opacity(selectedHourly == nil || selectedHourly?.id == item.id ? 1.0 : 0.4)
 
             if item.precipitationChance >= 0.5 {
-                RuleMark(y: .value("高確率", 50))
+                RuleMark(y: .value("High", 50))
                     .foregroundStyle(.red.opacity(0.3))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
             }
@@ -131,11 +161,17 @@ struct PrecipitationChartView: View {
         .animation(.easeInOut(duration: 0.2), value: selectedHourly?.id)
     }
 
+    /// Daily precipitation chart with value annotations.
+    ///
+    /// ## Implementation Notes
+    ///
+    /// - Uses `.annotation` modifier to display percentage above bars
+    /// - Tap gesture for selection (vs drag for hourly)
     private var dailyChartView: some View {
         Chart(dailyData) { item in
             BarMark(
-                x: .value("日付", item.date, unit: .day),
-                y: .value("降水確率", item.precipitationChance * 100),
+                x: .value("Date", item.date, unit: .day),
+                y: .value("Precipitation", item.precipitationChance * 100),
                 width: .ratio(0.7)
             )
             .foregroundStyle(precipitationColor(for: item.precipitationChance))
@@ -186,9 +222,9 @@ struct PrecipitationChartView: View {
 
     private var legendView: some View {
         HStack(spacing: 16) {
-            legendItem(color: .green, text: "低 (0-30%)")
-            legendItem(color: .yellow, text: "中 (30-50%)")
-            legendItem(color: .cyan, text: "高 (50%+)")
+            legendItem(color: .green, text: "Low (0-30%)")
+            legendItem(color: .yellow, text: "Medium (30-50%)")
+            legendItem(color: .cyan, text: "High (50%+)")
         }
         .font(.caption2)
     }
@@ -215,7 +251,7 @@ struct PrecipitationChartView: View {
                 Text(data.date, format: .dateTime.hour().minute())
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(String(format: "降水確率: %.0f%%", data.precipitationChance * 100))
+                Text(String(format: "Precipitation: %.0f%%", data.precipitationChance * 100))
                     .font(.headline)
             }
 
@@ -240,7 +276,7 @@ struct PrecipitationChartView: View {
                 Text(data.date, format: .dateTime.month().day().weekday())
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(String(format: "降水確率: %.0f%%", data.precipitationChance * 100))
+                Text(String(format: "Precipitation: %.0f%%", data.precipitationChance * 100))
                     .font(.headline)
             }
 
@@ -261,6 +297,11 @@ struct PrecipitationChartView: View {
 
     // MARK: - Helpers
 
+    /// Returns a color based on precipitation probability level.
+    ///
+    /// - Green: Low probability (0-30%)
+    /// - Yellow: Medium probability (30-50%)
+    /// - Cyan: High probability (50%+)
     private func precipitationColor(for chance: Double) -> Color {
         switch chance {
         case 0 ..< 0.3:

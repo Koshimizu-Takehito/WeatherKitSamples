@@ -2,7 +2,12 @@ import SwiftUI
 
 // MARK: - HourlyForecastView
 
-/// 時間ごとの予報を表示するView
+/// Displays a horizontally scrollable list of hourly weather forecasts.
+///
+/// Each hour is rendered by ``HourlyForecastItemView`` inside a material
+/// background card.
+///
+/// - SeeAlso: ``HourlyForecastEntity`` for the underlying data model.
 struct HourlyForecastView {
     let forecast: [HourlyForecastEntity]
 }

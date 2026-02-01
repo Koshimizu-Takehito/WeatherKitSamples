@@ -2,7 +2,14 @@ import SwiftUI
 
 // MARK: - Home Weather Content View
 
-/// 天気情報を表示するView
+/// Displays the loaded weather data in a scrollable layout.
+///
+/// Composes ``CurrentWeatherView``, ``HourlyForecastView``,
+/// ``DailyForecastView``, ``WeatherDetailView``, and
+/// ``WeatherAttributionView`` into a single content view.
+/// Supports pull-to-refresh via `.refreshable`.
+///
+/// Corresponds to ``HomeViewModel/State/loaded(_:)``.
 struct HomeWeatherContentView: View {
     @Environment(\.isMockDataEnabled) private var isMockDataEnabled
     @Environment(HomeViewModel.self) private var viewModel

@@ -2,7 +2,10 @@ import SwiftUI
 
 // MARK: - Home Error View
 
-/// エラー状態を表示するView
+/// Displays an error message with a retry action.
+///
+/// Corresponds to ``HomeViewModel/State/error(_:)``. Tapping the retry
+/// button triggers ``HomeViewModel/fetchCurrentWeather()`` again.
 struct HomeErrorView: View {
     @Environment(HomeViewModel.self) private var viewModel
     let message: String

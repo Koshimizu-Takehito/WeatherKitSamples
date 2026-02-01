@@ -3,14 +3,43 @@ import Foundation
 
 // MARK: - HourlyChartData
 
-/// 時間ごとのチャートデータをラップする構造体
+/// A data structure for hourly weather chart visualization.
+///
+/// Wraps weather forecast data in a format optimized for Swift Charts,
+/// providing all necessary properties for temperature and precipitation charts.
+///
+/// ## Learning Points
+///
+/// - **Identifiable Conformance**: Required for use in `ForEach` and `Chart` views.
+/// - **Data Transformation**: Created from ``HourlyForecastEntity`` using the
+///   convenience initializer, demonstrating the adapter pattern.
+///
+/// - SeeAlso: ``DailyChartData`` for daily forecast visualization.
+/// - SeeAlso: ``Chart3DDataPoint`` for 3D chart visualization.
 struct HourlyChartData: Identifiable {
+    /// Unique identifier for chart element tracking.
     let id: UUID
+
+    /// The date and time of this data point.
     let date: Date
+
+    /// Temperature in Celsius.
     let temperature: Double
+
+    /// Probability of precipitation (0.0 to 1.0).
     let precipitationChance: Double
+
+    /// SF Symbol name for the weather condition.
     let symbolName: String
 
+    /// Creates a new hourly chart data point.
+    ///
+    /// - Parameters:
+    ///   - id: Unique identifier. Defaults to a new UUID.
+    ///   - date: The date and time of this data point.
+    ///   - temperature: Temperature in Celsius.
+    ///   - precipitationChance: Precipitation probability (0.0-1.0).
+    ///   - symbolName: SF Symbol name for the condition.
     init(id: UUID = UUID(), date: Date, temperature: Double, precipitationChance: Double, symbolName: String) {
         self.id = id
         self.date = date
@@ -22,15 +51,37 @@ struct HourlyChartData: Identifiable {
 
 // MARK: - DailyChartData
 
-/// 日ごとのチャートデータをラップする構造体
+/// A data structure for daily weather chart visualization.
+///
+/// Wraps daily forecast data for use in temperature range charts,
+/// storing both high and low temperatures for range visualization.
+///
+/// ## Learning Points
+///
+/// - **Range Visualization**: The `highTemperature` and `lowTemperature`
+///   properties are used with `BarMark(yStart:yEnd:)` for range bars.
+///
+/// - SeeAlso: ``HourlyChartData`` for hourly visualization.
 struct DailyChartData: Identifiable {
+    /// Unique identifier for chart element tracking.
     let id: UUID
+
+    /// The date of this forecast.
     let date: Date
+
+    /// Predicted high temperature in Celsius.
     let highTemperature: Double
+
+    /// Predicted low temperature in Celsius.
     let lowTemperature: Double
+
+    /// Probability of precipitation (0.0 to 1.0).
     let precipitationChance: Double
+
+    /// SF Symbol name for the weather condition.
     let symbolName: String
 
+    /// Creates a new daily chart data point.
     init(id: UUID = UUID(), date: Date, highTemperature: Double, lowTemperature: Double, precipitationChance: Double, symbolName: String) {
         self.id = id
         self.date = date
@@ -43,13 +94,22 @@ struct DailyChartData: Identifiable {
 
 // MARK: - TimePeriod
 
-/// 時間帯を表す列挙型
+/// Represents time periods of the day for data aggregation.
+///
+/// Used in 3D charts to group hourly data into meaningful periods
+/// (morning, afternoon, evening, night) for aggregated visualization.
+///
+/// ## Learning Points
+///
+/// - **Plottable Conformance**: Allows direct use as chart axis values.
+/// - **CaseIterable**: Enables iteration over all periods for aggregation.
 enum TimePeriod: String, CaseIterable, Plottable {
-    case morning = "朝"
-    case afternoon = "昼"
-    case evening = "夕"
-    case night = "夜"
+    case morning = "Morning"
+    case afternoon = "Afternoon"
+    case evening = "Evening"
+    case night = "Night"
 
+    /// The hour range for this time period.
     var hourRange: ClosedRange<Int> {
         switch self {
         case .morning: 6 ... 11
@@ -59,6 +119,10 @@ enum TimePeriod: String, CaseIterable, Plottable {
         }
     }
 
+    /// Determines the time period for a given hour.
+    ///
+    /// - Parameter hour: Hour of the day (0-23).
+    /// - Returns: The corresponding time period.
     static func from(hour: Int) -> Self {
         switch hour {
         case 6 ... 11: .morning
@@ -71,16 +135,48 @@ enum TimePeriod: String, CaseIterable, Plottable {
 
 // MARK: - Chart3DDataPoint
 
-/// 3Dチャート用のデータポイント
+/// A data point for 3D chart visualization.
+///
+/// Extends hourly data with additional properties needed for 3D charts,
+/// including day index and time period classification.
+///
+/// ## Learning Points
+///
+/// - **Multi-Dimensional Data**: Combines time (day + hour), value (temperature),
+///   and category (period) dimensions for 3D visualization.
+/// - **Computed Properties**: `dayString` provides formatted display text.
+///
+/// - SeeAlso: ``Chart3DPeriodData`` for aggregated period data.
 struct Chart3DDataPoint: Identifiable {
+    /// Unique identifier.
     let id: UUID
+
+    /// The date of this data point (day only, no time).
     let day: Date
+
+    /// Zero-based index of the day (0, 1, 2...).
     let dayIndex: Int
+
+    /// Hour of the day (0-23).
     let hour: Int
+
+    /// The time period this hour belongs to.
     let period: TimePeriod
+
+    /// Temperature in Celsius.
     let temperature: Double
+
+    /// Probability of precipitation (0.0 to 1.0).
     let precipitationChance: Double
 
+    /// Creates a new 3D chart data point.
+    ///
+    /// - Parameters:
+    ///   - day: The date (day only).
+    ///   - dayIndex: Zero-based day index.
+    ///   - hour: Hour of the day (0-23).
+    ///   - temperature: Temperature in Celsius.
+    ///   - precipitationChance: Precipitation probability.
     init(day: Date, dayIndex: Int, hour: Int, temperature: Double, precipitationChance: Double) {
         self.id = UUID()
         self.day = day
@@ -91,6 +187,7 @@ struct Chart3DDataPoint: Identifiable {
         self.precipitationChance = precipitationChance
     }
 
+    /// A short formatted string representing the day.
     var dayString: String {
         WeatherFormatters.formatShortDate(day)
     }
@@ -98,15 +195,37 @@ struct Chart3DDataPoint: Identifiable {
 
 // MARK: - Chart3DPeriodData
 
-/// 3Dチャート用の日別時間帯データ（棒グラフ用）
+/// Aggregated data for 3D bar charts grouped by time period.
+///
+/// Provides averaged temperature and maximum precipitation data
+/// for each time period within a day, suitable for 3D bar visualization.
+///
+/// ## Learning Points
+///
+/// - **Data Aggregation**: Hourly data is aggregated into periods
+///   with average temperatures and max precipitation.
+/// - **Bar Chart Optimization**: Fewer data points than hourly data
+///   make 3D bar charts more readable.
 struct Chart3DPeriodData: Identifiable {
+    /// Unique identifier.
     let id: UUID
+
+    /// The date of this data (day only).
     let day: Date
+
+    /// Zero-based index of the day.
     let dayIndex: Int
+
+    /// The time period this data represents.
     let period: TimePeriod
+
+    /// Average temperature during this period.
     let averageTemperature: Double
+
+    /// Maximum precipitation chance during this period.
     let maxPrecipitationChance: Double
 
+    /// A short formatted string representing the day.
     var dayString: String {
         WeatherFormatters.formatShortDate(day)
     }
@@ -115,7 +234,12 @@ struct Chart3DPeriodData: Identifiable {
 // MARK: - 3D Chart Data Conversion
 
 extension [HourlyChartData] {
-    /// 時間ごとのデータを3Dチャート用データポイントに変換
+    /// Converts hourly chart data to 3D data points.
+    ///
+    /// Groups data by day and creates ``Chart3DDataPoint`` instances
+    /// with proper day indices for 3D chart positioning.
+    ///
+    /// - Returns: An array of 3D data points.
     func to3DDataPoints() -> [Chart3DDataPoint] {
         let calendar = Calendar.current
         var result: [Chart3DDataPoint] = []
@@ -143,7 +267,12 @@ extension [HourlyChartData] {
         return result
     }
 
-    /// 時間帯別に集約した3Dデータを生成
+    /// Converts hourly data to aggregated period data for 3D bar charts.
+    ///
+    /// Groups hourly data by day and time period, calculating
+    /// average temperatures and maximum precipitation chances.
+    ///
+    /// - Returns: An array of aggregated period data.
     func to3DPeriodData() -> [Chart3DPeriodData] {
         let calendar = Calendar.current
         var result: [Chart3DPeriodData] = []
@@ -186,7 +315,9 @@ extension [HourlyChartData] {
 // MARK: - Entity Conversion
 
 extension HourlyChartData {
-    /// HourlyForecastEntityからHourlyChartDataを生成
+    /// Creates chart data from a domain entity.
+    ///
+    /// - Parameter entity: The hourly forecast entity to convert.
     init(from entity: HourlyForecastEntity) {
         self.id = entity.id
         self.date = entity.date
@@ -197,7 +328,9 @@ extension HourlyChartData {
 }
 
 extension DailyChartData {
-    /// DailyForecastEntityからDailyChartDataを生成
+    /// Creates chart data from a domain entity.
+    ///
+    /// - Parameter entity: The daily forecast entity to convert.
     init(from entity: DailyForecastEntity) {
         self.id = entity.id
         self.date = entity.date
@@ -210,9 +343,25 @@ extension DailyChartData {
 
 // MARK: - ChartPreviewData
 
-/// チャートプレビュー用のデータファクトリ
+/// A factory for generating preview and test chart data.
+///
+/// Provides static methods to create sample data for SwiftUI previews
+/// and development without requiring actual weather data.
+///
+/// ## Usage
+///
+/// ```swift
+/// #Preview {
+///     HourlyTemperatureChartView(data: ChartPreviewData.makeHourlyData())
+/// }
+/// ```
 enum ChartPreviewData {
-    /// 24時間分の時間ごとデータを生成
+    /// Generates 24 hours of sample hourly data.
+    ///
+    /// Creates data starting from the current time with
+    /// realistic temperature variations and conditions.
+    ///
+    /// - Returns: An array of 24 ``HourlyChartData`` items.
     static func makeHourlyData() -> [HourlyChartData] {
         let now = Date()
         var result: [HourlyChartData] = []
@@ -235,7 +384,9 @@ enum ChartPreviewData {
         return result
     }
 
-    /// 10日分の日ごとデータを生成
+    /// Generates 10 days of sample daily data.
+    ///
+    /// - Returns: An array of 10 ``DailyChartData`` items.
     static func makeDailyData() -> [DailyChartData] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -263,7 +414,12 @@ enum ChartPreviewData {
         return result
     }
 
-    /// 複数日分（3日間）の時間ごとデータを生成
+    /// Generates 3 days of hourly data for 3D charts.
+    ///
+    /// Creates detailed hourly data with realistic diurnal
+    /// temperature patterns across multiple days.
+    ///
+    /// - Returns: An array of 72 ``HourlyChartData`` items (24 hours x 3 days).
     static func makeMultiDayHourlyData() -> [HourlyChartData] {
         let calendar = Calendar.current
         let now = Date()
@@ -274,6 +430,7 @@ enum ChartPreviewData {
                 continue
             }
 
+            // Typical diurnal temperature pattern
             let baseTemps: [Double] = [
                 12, 11, 10, 10, 11, 13, 15, 17, 19, 21, 22, 23,
                 24, 24, 23, 22, 20, 18, 16, 15, 14, 13, 12, 12,
@@ -309,7 +466,9 @@ enum ChartPreviewData {
         return result
     }
 
-    /// 複数日データを日ごとにグループ化
+    /// Generates multi-day data grouped by day.
+    ///
+    /// - Returns: An array of arrays, each containing 24 hourly data points.
     static func makeMultiDayGroupedData() -> [[HourlyChartData]] {
         let allData = makeMultiDayHourlyData()
         let calendar = Calendar.current

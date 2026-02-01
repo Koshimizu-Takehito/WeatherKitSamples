@@ -2,7 +2,13 @@ import SwiftUI
 
 // MARK: - WeatherAttributionView
 
-/// 天気データの帰属表示View
+/// Displays the Apple Weather data attribution notice.
+///
+/// Shows the Apple logo and "Weather" text when using live data, or a
+/// "mock data" label when ``EnvironmentValues/isMockDataEnabled`` is `true`.
+///
+/// - Note: Apple requires attribution when displaying WeatherKit data.
+///   See [WeatherKit attribution requirements](https://developer.apple.com/weatherkit/get-started/#attribution-requirements).
 struct WeatherAttributionView {
     @Environment(\.isMockDataEnabled) private var isMockDataEnabled
 }

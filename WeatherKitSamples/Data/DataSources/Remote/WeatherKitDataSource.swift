@@ -4,10 +4,52 @@ import WeatherKit
 
 // MARK: - WeatherKit Data Source
 
-/// WeatherKitを使用したリモートデータソース
+/// A data source that fetches weather using Apple's WeatherKit framework.
+///
+/// This implementation demonstrates how to integrate WeatherKit into a
+/// Clean Architecture project, mapping WeatherKit types to domain entities.
+///
+/// ## Overview
+///
+/// `WeatherKitDataSource` uses `WeatherService.shared` to request weather data
+/// and maps the response to ``WeatherEntity`` for use in the domain layer.
+///
+/// ## Requirements
+///
+/// - **Apple Developer Program**: WeatherKit requires an active membership.
+/// - **App ID Capability**: Enable WeatherKit capability in your App ID.
+/// - **Entitlements**: Add WeatherKit entitlement to your app.
+///
+/// ## Learning Points
+///
+/// - **WeatherService**: The shared singleton that handles all WeatherKit requests.
+/// - **Type Mapping**: WeatherKit types (`CurrentWeather`, `HourWeather`, etc.)
+///   are mapped to framework-agnostic domain entities.
+/// - **Measurement Handling**: WeatherKit uses `Measurement<Unit>` types;
+///   extract `.value` for raw numbers.
+///
+/// ## Example
+///
+/// ```swift
+/// let dataSource = WeatherKitDataSource()
+/// let weather = try await dataSource.fetchWeather(for: location)
+/// print("Current temp: \(weather.current.temperature)°C")
+/// ```
+///
+/// - SeeAlso: [WeatherKit Documentation](https://developer.apple.com/documentation/weatherkit)
+/// - SeeAlso: ``MockWeatherDataSource`` for development without WeatherKit.
 final class WeatherKitDataSource: WeatherDataSourceProtocol, Sendable {
+    /// The shared WeatherKit service instance.
     private let weatherService = WeatherService.shared
 
+    /// Fetches weather data from WeatherKit for the specified location.
+    ///
+    /// This method requests current conditions, hourly forecasts, and daily
+    /// forecasts from WeatherKit, then maps them to domain entities.
+    ///
+    /// - Parameter location: The geographic location to fetch weather for.
+    /// - Returns: A ``WeatherEntity`` containing all weather data.
+    /// - Throws: WeatherKit errors if the request fails.
     func fetchWeather(for location: CLLocation) async throws -> WeatherEntity {
         let weather = try await weatherService.weather(for: location)
 
@@ -24,6 +66,14 @@ final class WeatherKitDataSource: WeatherDataSourceProtocol, Sendable {
 
     // MARK: - Private Mapping Methods
 
+    /// Maps WeatherKit's `CurrentWeather` to a domain entity.
+    ///
+    /// ## Mapping Details
+    ///
+    /// - Temperature values are extracted from `Measurement<UnitTemperature>`.
+    /// - Wind speed is extracted from `Measurement<UnitSpeed>`.
+    /// - Visibility is converted to kilometers before extraction.
+    /// - Condition and pressure trend use dedicated mapping functions.
     private func mapCurrentWeather(_ weather: CurrentWeather) -> CurrentWeatherEntity {
         CurrentWeatherEntity(
             temperature: weather.temperature.value,
@@ -42,6 +92,9 @@ final class WeatherKitDataSource: WeatherDataSourceProtocol, Sendable {
         )
     }
 
+    /// Maps WeatherKit's hourly forecast to domain entities.
+    ///
+    /// Filters the forecast to include only the next 24 hours.
     private func mapHourlyForecast(_ forecast: Forecast<HourWeather>) -> [HourlyForecastEntity] {
         let now = Date()
         let next24Hours = now.addingTimeInterval(24 * 60 * 60)
@@ -59,6 +112,9 @@ final class WeatherKitDataSource: WeatherDataSourceProtocol, Sendable {
             }
     }
 
+    /// Maps WeatherKit's daily forecast to domain entities.
+    ///
+    /// Limits the forecast to the next 10 days.
     private func mapDailyForecast(_ forecast: Forecast<DayWeather>) -> [DailyForecastEntity] {
         Array(forecast.prefix(10)).map { day in
             DailyForecastEntity(
@@ -71,6 +127,10 @@ final class WeatherKitDataSource: WeatherDataSourceProtocol, Sendable {
         }
     }
 
+    /// Maps WeatherKit's condition enum to the domain condition enum.
+    ///
+    /// This mapping isolates the domain layer from WeatherKit types,
+    /// allowing the domain to remain framework-agnostic.
     private func mapCondition(_ condition: WeatherKit.WeatherCondition) -> WeatherKitSamples.WeatherCondition {
         switch condition {
         case .clear: .clear
@@ -91,6 +151,7 @@ final class WeatherKitDataSource: WeatherDataSourceProtocol, Sendable {
         }
     }
 
+    /// Maps WeatherKit's pressure trend to the domain pressure trend.
     private func mapPressureTrend(_ trend: WeatherKit.PressureTrend) -> WeatherKitSamples.PressureTrend {
         switch trend {
         case .rising: return .rising

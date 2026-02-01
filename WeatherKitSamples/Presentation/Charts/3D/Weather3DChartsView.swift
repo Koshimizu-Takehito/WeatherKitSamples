@@ -1,19 +1,42 @@
 import SwiftUI
 
-/// 3Dチャートの統合ショーケースビュー
-/// Swift Charts 3D API のサンプルとして各種3Dチャートタイプを展示
+/// A showcase view demonstrating various 3D chart visualizations.
+///
+/// This view serves as a gallery of Chart3D types available in iOS 26+,
+/// using weather data to demonstrate different 3D visualization techniques.
+///
+/// ## Overview
+///
+/// The showcase includes:
+/// - **Point Chart**: 3D scatter plot using PointMark with z-axis
+/// - **Multi-Day Chart**: Multiple day comparison in 3D space
+/// - **Surface Chart**: Continuous surface visualization with SurfacePlot
+///
+/// ## Learning Points
+///
+/// - Using `Chart3D` container for 3D visualizations
+/// - Setting camera position with `chart3DPose`
+/// - Gesture-based rotation and zoom interaction
+/// - Platform availability handling with `@available`
+///
+/// - SeeAlso: [Charts 3D](https://developer.apple.com/documentation/charts)
 struct Weather3DChartsView: View {
+    /// Hourly weather data for single-day charts.
     let hourlyData: [HourlyChartData]
+
+    /// Multi-day hourly data for comparison charts.
     let multiDayData: [[HourlyChartData]]
 
     @State private var selectedTab: Chart3DTab = .point
 
+    /// Available 3D chart type tabs.
     enum Chart3DTab: String, CaseIterable {
-        case point = "ポイント"
-        case multiDay = "複数日"
-        case surface = "サーフェス"
-        case all = "すべて"
+        case point = "Point"
+        case multiDay = "Multi-Day"
+        case surface = "Surface"
+        case all = "All"
 
+        /// SF Symbol name for the tab icon.
         var icon: String {
             switch self {
             case .point: "circle.hexagongrid"
@@ -23,21 +46,23 @@ struct Weather3DChartsView: View {
             }
         }
 
+        /// The Chart3D mark type name.
         var markName: String {
             switch self {
             case .point: "PointMark + z"
-            case .multiDay: "PointMark + z (複数系列)"
+            case .multiDay: "PointMark + z (Multi-series)"
             case .surface: "SurfacePlot"
-            case .all: "全Mark"
+            case .all: "All Marks"
             }
         }
 
+        /// Description of what the chart demonstrates.
         var description: String {
             switch self {
-            case .point: "3D空間にデータポイントをプロット。多変量データの可視化に使用。"
-            case .multiDay: "複数日のデータを3D空間で比較表示。"
-            case .surface: "連続的なサーフェス（曲面）を表示。グリッドデータの可視化に使用。"
-            case .all: "すべての3Dチャートタイプを表示します。"
+            case .point: "Plots data points in 3D space. Used for multi-variate data visualization."
+            case .multiDay: "Compares multiple days of data in 3D space."
+            case .surface: "Displays continuous surfaces. Used for grid data visualization."
+            case .all: "Displays all 3D chart types together."
             }
         }
     }
@@ -70,11 +95,11 @@ struct Weather3DChartsView: View {
                 .font(.system(size: 40))
                 .foregroundStyle(.secondary)
 
-            Text("Swift Charts 3D サンプル")
+            Text("Swift Charts 3D Samples")
                 .font(.title2)
                 .fontWeight(.bold)
 
-            Text("Chart3D API を使用した3Dチャートの実装例")
+            Text("Chart3D API implementation examples")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -173,15 +198,15 @@ struct Weather3DChartsView: View {
 
     private var allChartsView: some View {
         VStack(spacing: 20) {
-            chartSection(title: "3Dポイントグラフ", icon: "circle.hexagongrid", markName: "PointMark + z") {
+            chartSection(title: "3D Point Chart", icon: "circle.hexagongrid", markName: "PointMark + z") {
                 Weather3DPointChartView(data: hourlyData.to3DDataPoints())
             }
 
-            chartSection(title: "3D複数日グラフ", icon: "chart.line.uptrend.xyaxis", markName: "PointMark + z") {
+            chartSection(title: "3D Multi-Day Chart", icon: "chart.line.uptrend.xyaxis", markName: "PointMark + z") {
                 DailyTemperature3DLineChartView(multiDayData: multiDayData)
             }
 
-            chartSection(title: "3Dサーフェスグラフ", icon: "square.3.layers.3d", markName: "SurfacePlot") {
+            chartSection(title: "3D Surface Chart", icon: "square.3.layers.3d", markName: "SurfacePlot") {
                 Temperature3DSurfaceChartView(multiDayData: multiDayData)
             }
         }
@@ -216,7 +241,7 @@ struct Weather3DChartsView: View {
 
     private var chartInfoView: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("使用している Chart3D コンポーネント", systemImage: "info.circle")
+            Label("Chart3D Component Used", systemImage: "info.circle")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
@@ -245,14 +270,14 @@ struct Weather3DChartsView: View {
 
     private var chart3DFeatures: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Chart3D の特徴")
+            Text("Chart3D Features")
                 .font(.subheadline)
                 .fontWeight(.medium)
 
-            featureItem(icon: "hand.draw", text: "ジェスチャーで回転・ズーム可能")
-            featureItem(icon: "cube", text: "3軸でデータを可視化")
-            featureItem(icon: "paintbrush", text: "foregroundStyle でスタイリング")
-            featureItem(icon: "camera", text: "chart3DPose でカメラ位置を設定")
+            featureItem(icon: "hand.draw", text: "Rotate and zoom with gestures")
+            featureItem(icon: "cube", text: "Visualize data across 3 axes")
+            featureItem(icon: "paintbrush", text: "Style with foregroundStyle")
+            featureItem(icon: "camera", text: "Set camera position with chart3DPose")
         }
     }
 

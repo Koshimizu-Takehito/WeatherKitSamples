@@ -4,7 +4,13 @@ import SwiftUI
 
 // MARK: - LocationSearchView
 
-/// 位置検索画面のView
+/// A search interface for finding locations by city name.
+///
+/// Presents a text field for free-form search, a results list powered by
+/// ``LocationSearchViewModel``, and a predefined list of major cities.
+/// Selecting a location triggers weather fetching via ``HomeViewModel``.
+///
+/// - SeeAlso: ``LocationSearchViewModel`` for the search logic.
 struct LocationSearchView {
     @Environment(\.dismiss) private var dismiss
     @Environment(HomeViewModel.self) private var homeViewModel

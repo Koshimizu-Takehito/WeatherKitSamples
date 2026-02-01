@@ -1,18 +1,39 @@
 import Charts
 import SwiftUI
 
-/// 日別気温範囲チャートビュー
-/// Swift Charts の BarMark (yStart/yEnd), RuleMark のサンプル
+/// A chart view displaying daily temperature ranges (high/low).
+///
+/// Demonstrates the use of `BarMark` with `yStart`/`yEnd` parameters
+/// and `RuleMark` for range visualization in Swift Charts.
+///
+/// ## Swift Charts Techniques
+///
+/// - **BarMark with yStart/yEnd**: Creates bars spanning from low to high temperature.
+/// - **RuleMark**: Alternative visualization showing temperature range as a line.
+/// - **Capsule Clip Shape**: Custom bar styling with rounded ends.
+/// - **PointMark with Custom Symbol**: Weather icons at temperature points.
+/// - **Gradient Fill**: Temperature-based color gradient for visual appeal.
+///
+/// ## Learning Points
+///
+/// - Using `yStart` and `yEnd` for range bars (not just height)
+/// - Multiple chart style options in a single view
+/// - Combining marks for richer visualizations
+/// - Interactive tap selection with `SpatialTapGesture`
+///
+/// - SeeAlso: [BarMark](https://developer.apple.com/documentation/charts/barmark)
 struct DailyTemperatureRangeChartView: View {
+    /// The daily forecast data to display.
     let data: [DailyChartData]
 
     @State private var selectedData: DailyChartData?
     @State private var chartStyle: ChartStyleType = .bar
 
+    /// Available chart visualization styles.
     enum ChartStyleType: String, CaseIterable {
-        case bar = "バー"
-        case rule = "ルール"
-        case capsule = "カプセル"
+        case bar = "Bar"
+        case rule = "Rule"
+        case capsule = "Capsule"
     }
 
     private var temperatureRange: ClosedRange<Double> {
@@ -43,11 +64,11 @@ struct DailyTemperatureRangeChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("10日間の気温", systemImage: "calendar")
+            Label("10-Day Temperature", systemImage: "calendar")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("最高・最低気温の範囲")
+            Text("High and low temperature range")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -55,6 +76,13 @@ struct DailyTemperatureRangeChartView: View {
 
     // MARK: - Chart View
 
+    /// The main chart with switchable visualization styles.
+    ///
+    /// ## Style Descriptions
+    ///
+    /// - **Bar**: Traditional bar chart with rounded corners
+    /// - **Rule**: Line-based range with point markers
+    /// - **Capsule**: Pill-shaped bars with weather icons
     private var chartView: some View {
         Chart(data) { item in
             switch chartStyle {
@@ -104,12 +132,16 @@ struct DailyTemperatureRangeChartView: View {
 
     // MARK: - Chart Marks
 
+    /// Bar chart style using BarMark with yStart/yEnd.
+    ///
+    /// This demonstrates how to create range bars that span
+    /// from one value to another (not starting from zero).
     @ChartContentBuilder
     private func barMarkChart(for item: DailyChartData) -> some ChartContent {
         BarMark(
-            x: .value("日付", item.date, unit: .day),
-            yStart: .value("最低", item.lowTemperature),
-            yEnd: .value("最高", item.highTemperature),
+            x: .value("Date", item.date, unit: .day),
+            yStart: .value("Low", item.lowTemperature),
+            yEnd: .value("High", item.highTemperature),
             width: .ratio(0.6)
         )
         .foregroundStyle(temperatureGradient(for: item))
@@ -117,38 +149,46 @@ struct DailyTemperatureRangeChartView: View {
         .opacity(selectedData == nil || selectedData?.id == item.id ? 1.0 : 0.4)
     }
 
+    /// Rule chart style using RuleMark with point markers.
+    ///
+    /// Shows the temperature range as a thick line with
+    /// colored points at high and low values.
     @ChartContentBuilder
     private func ruleMarkChart(for item: DailyChartData) -> some ChartContent {
         RuleMark(
-            x: .value("日付", item.date, unit: .day),
-            yStart: .value("最低", item.lowTemperature),
-            yEnd: .value("最高", item.highTemperature)
+            x: .value("Date", item.date, unit: .day),
+            yStart: .value("Low", item.lowTemperature),
+            yEnd: .value("High", item.highTemperature)
         )
         .foregroundStyle(temperatureGradient(for: item))
         .lineStyle(StrokeStyle(lineWidth: 8, lineCap: .round))
         .opacity(selectedData == nil || selectedData?.id == item.id ? 1.0 : 0.4)
 
         PointMark(
-            x: .value("日付", item.date, unit: .day),
-            y: .value("最高", item.highTemperature)
+            x: .value("Date", item.date, unit: .day),
+            y: .value("High", item.highTemperature)
         )
         .foregroundStyle(.orange)
         .symbolSize(40)
 
         PointMark(
-            x: .value("日付", item.date, unit: .day),
-            y: .value("最低", item.lowTemperature)
+            x: .value("Date", item.date, unit: .day),
+            y: .value("Low", item.lowTemperature)
         )
         .foregroundStyle(.cyan)
         .symbolSize(40)
     }
 
+    /// Capsule chart style with weather icons.
+    ///
+    /// Uses `.clipShape(Capsule())` for rounded bar ends
+    /// and custom symbols for weather condition display.
     @ChartContentBuilder
     private func capsuleMarkChart(for item: DailyChartData) -> some ChartContent {
         BarMark(
-            x: .value("日付", item.date, unit: .day),
-            yStart: .value("最低", item.lowTemperature),
-            yEnd: .value("最高", item.highTemperature),
+            x: .value("Date", item.date, unit: .day),
+            yStart: .value("Low", item.lowTemperature),
+            yEnd: .value("High", item.highTemperature),
             width: .ratio(0.4)
         )
         .foregroundStyle(temperatureGradient(for: item))
@@ -156,8 +196,8 @@ struct DailyTemperatureRangeChartView: View {
         .opacity(selectedData == nil || selectedData?.id == item.id ? 1.0 : 0.4)
 
         PointMark(
-            x: .value("日付", item.date, unit: .day),
-            y: .value("最高", item.highTemperature + 1.5)
+            x: .value("Date", item.date, unit: .day),
+            y: .value("High", item.highTemperature + 1.5)
         )
         .symbol {
             Image(systemName: item.symbolName)
@@ -169,7 +209,7 @@ struct DailyTemperatureRangeChartView: View {
     // MARK: - Style Picker
 
     private var stylePickerView: some View {
-        Picker("スタイル", selection: $chartStyle) {
+        Picker("Style", selection: $chartStyle) {
             ForEach(ChartStyleType.allCases, id: \.self) { style in
                 Text(style.rawValue).tag(style)
             }

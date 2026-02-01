@@ -2,21 +2,41 @@ import SwiftUI
 
 // MARK: - WeatherChartsView
 
-/// 天気チャートの統合ショーケースビュー
-/// Swift Charts のサンプルとして各種チャートタイプを展示
+/// A showcase view demonstrating various Swift Charts visualizations.
+///
+/// This view serves as a gallery of chart types, allowing users to explore
+/// different visualization techniques using weather data.
+///
+/// ## Overview
+///
+/// The showcase includes:
+/// - **Hourly Temperature**: LineMark, AreaMark, PointMark
+/// - **Daily Temperature**: BarMark (yStart/yEnd), RuleMark
+/// - **Precipitation**: BarMark with annotations
+/// - **3D Charts**: Chart3D API (iOS 26+/macOS 26+)
+///
+/// ## Learning Points
+///
+/// - Tab-based navigation for chart type selection
+/// - Conditional compilation for platform-specific features
+/// - Integration of multiple chart components in a single view
+///
+/// - SeeAlso: [Swift Charts](https://developer.apple.com/documentation/charts)
 struct WeatherChartsView {
     @Environment(HomeViewModel.self) private var viewModel
 
     @State private var selectedTab: ChartTab = .hourlyTemperature
     @State private var showing3DCharts = false
 
+    /// Available chart type tabs.
     enum ChartTab: String, CaseIterable {
-        case hourlyTemperature = "時間別気温"
-        case dailyTemperature = "日別気温"
-        case precipitation = "降水確率"
+        case hourlyTemperature = "Hourly Temp"
+        case dailyTemperature = "Daily Temp"
+        case precipitation = "Precipitation"
         case charts3D = "3D Charts"
-        case all = "すべて"
+        case all = "All"
 
+        /// SF Symbol name for the tab icon.
         var icon: String {
             switch self {
             case .hourlyTemperature: "clock"
@@ -27,16 +47,18 @@ struct WeatherChartsView {
             }
         }
 
+        /// Description of the Swift Charts marks used.
         var description: String {
             switch self {
             case .hourlyTemperature: "LineMark, AreaMark, PointMark"
             case .dailyTemperature: "BarMark (yStart/yEnd), RuleMark"
             case .precipitation: "BarMark, RuleMark"
             case .charts3D: "BarMark3D, PointMark3D, LineMark3D"
-            case .all: "すべてのチャートを表示"
+            case .all: "All charts displayed together"
             }
         }
 
+        /// Whether this tab requires 3D chart capabilities.
         var is3D: Bool {
             self == .charts3D
         }
@@ -95,11 +117,11 @@ extension WeatherChartsView: View {
                 .font(.system(size: 40))
                 .foregroundStyle(.secondary)
 
-            Text("Swift Charts サンプル")
+            Text("Swift Charts Samples")
                 .font(.title2)
                 .fontWeight(.bold)
 
-            Text("天気データを使用した各種チャートの実装例")
+            Text("Chart implementations using weather data")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -196,7 +218,7 @@ extension WeatherChartsView: View {
                 .font(.title2)
                 .fontWeight(.bold)
 
-            Text("iOS 26+ / macOS 26+ で利用可能な\nChart3D APIを使用した3Dチャート")
+            Text("3D charts using Chart3D API\navailable on iOS 26+ / macOS 26+")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -205,7 +227,7 @@ extension WeatherChartsView: View {
                 Button {
                     showing3DCharts = true
                 } label: {
-                    Label("3Dチャートを表示", systemImage: "arrow.right.circle.fill")
+                    Label("View 3D Charts", systemImage: "arrow.right.circle.fill")
                         .font(.headline)
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -214,7 +236,7 @@ extension WeatherChartsView: View {
                 }
                 .buttonStyle(.plain)
             } else {
-                Text("iOS 26+ / macOS 26+ が必要です")
+                Text("Requires iOS 26+ / macOS 26+")
                     .font(.caption)
                     .foregroundStyle(.orange)
                     .padding()
@@ -222,7 +244,7 @@ extension WeatherChartsView: View {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("含まれるチャート:")
+                Text("Included Charts:")
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundStyle(.secondary)
@@ -257,15 +279,15 @@ extension WeatherChartsView: View {
 
     private var allChartsView: some View {
         VStack(spacing: 20) {
-            chartSection(title: "時間別気温", icon: "clock", description: "LineMark, AreaMark, PointMark") {
+            chartSection(title: "Hourly Temperature", icon: "clock", description: "LineMark, AreaMark, PointMark") {
                 HourlyTemperatureChartView(data: viewModel.hourlyChartData)
             }
 
-            chartSection(title: "日別気温範囲", icon: "calendar", description: "BarMark (yStart/yEnd), RuleMark") {
+            chartSection(title: "Daily Temperature Range", icon: "calendar", description: "BarMark (yStart/yEnd), RuleMark") {
                 DailyTemperatureRangeChartView(data: viewModel.dailyChartData)
             }
 
-            chartSection(title: "降水確率", icon: "drop.fill", description: "BarMark, アノテーション") {
+            chartSection(title: "Precipitation", icon: "drop.fill", description: "BarMark, Annotation") {
                 PrecipitationChartView(hourlyData: viewModel.hourlyChartData, dailyData: viewModel.dailyChartData)
             }
         }
@@ -300,7 +322,7 @@ extension WeatherChartsView: View {
 
     private var chartInfoView: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("使用している Swift Charts コンポーネント", systemImage: "info.circle")
+            Label("Swift Charts Components Used", systemImage: "info.circle")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
@@ -323,15 +345,15 @@ extension WeatherChartsView: View {
             VStack(alignment: .leading, spacing: 8) {
                 markDescription(
                     name: "LineMark",
-                    description: "データポイントを線で結ぶ折れ線グラフ"
+                    description: "Line chart connecting data points"
                 )
                 markDescription(
                     name: "AreaMark",
-                    description: "線の下を塗りつぶすエリアチャート"
+                    description: "Filled area under the line"
                 )
                 markDescription(
                     name: "PointMark",
-                    description: "各データポイントを示すマーカー"
+                    description: "Markers at each data point"
                 )
             }
 
@@ -339,15 +361,15 @@ extension WeatherChartsView: View {
             VStack(alignment: .leading, spacing: 8) {
                 markDescription(
                     name: "BarMark (yStart/yEnd)",
-                    description: "開始と終了値を指定した範囲バー"
+                    description: "Range bars with start and end values"
                 )
                 markDescription(
                     name: "RuleMark",
-                    description: "線状のマーク（しきい値や範囲表示に使用）"
+                    description: "Line marks for thresholds and ranges"
                 )
                 markDescription(
                     name: "PointMark",
-                    description: "最高/最低気温のポイント表示"
+                    description: "High/low temperature point indicators"
                 )
             }
 
@@ -355,15 +377,15 @@ extension WeatherChartsView: View {
             VStack(alignment: .leading, spacing: 8) {
                 markDescription(
                     name: "BarMark",
-                    description: "値を棒グラフで表示"
+                    description: "Bar chart for percentage values"
                 )
                 markDescription(
                     name: "annotation",
-                    description: "バーの上に値を表示するアノテーション"
+                    description: "Text labels above bars"
                 )
                 markDescription(
                     name: "RuleMark",
-                    description: "しきい値（50%）を示す破線"
+                    description: "Dashed threshold line at 50%"
                 )
             }
 
@@ -371,15 +393,15 @@ extension WeatherChartsView: View {
             VStack(alignment: .leading, spacing: 8) {
                 markDescription(
                     name: "BarMark3D",
-                    description: "3D空間に棒グラフを配置"
+                    description: "3D bar chart in spatial view"
                 )
                 markDescription(
                     name: "PointMark3D",
-                    description: "3D空間にデータポイントをプロット"
+                    description: "3D scatter plot points"
                 )
                 markDescription(
                     name: "LineMark3D",
-                    description: "3D空間に折れ線を描画"
+                    description: "3D line connections"
                 )
             }
 

@@ -3,11 +3,32 @@ import Foundation
 
 // MARK: - Weather Data Source Protocol
 
-/// 天気データソースのプロトコル
-/// Remote/Mockの切り替えはこのプロトコルで抽象化される
+/// A protocol defining the interface for weather data retrieval.
+///
+/// This protocol abstracts the data fetching layer, enabling seamless
+/// switching between different data sources such as the WeatherKit API
+/// and mock data for development and testing.
+///
+/// ## Overview
+///
+/// The data source protocol is implemented by:
+/// - ``WeatherKitDataSource``: Production implementation using Apple's WeatherKit
+/// - ``MockWeatherDataSource``: Mock implementation for development and testing
+///
+/// ## Learning Points
+///
+/// - **Strategy Pattern**: Different data source implementations can be
+///   swapped at runtime through dependency injection.
+/// - **Testability**: The mock implementation allows UI development and
+///   testing without WeatherKit entitlements or network access.
+///
+/// - SeeAlso: ``WeatherKitDataSource`` for the WeatherKit implementation.
+/// - SeeAlso: ``MockWeatherDataSource`` for the mock implementation.
 protocol WeatherDataSourceProtocol: Sendable {
-    /// 指定された位置の天気情報を取得する
-    /// - Parameter location: 位置情報
-    /// - Returns: 天気エンティティ
+    /// Fetches weather information for the specified location.
+    ///
+    /// - Parameter location: The geographic location to fetch weather for.
+    /// - Returns: A ``WeatherEntity`` containing current and forecast data.
+    /// - Throws: An error if the weather data cannot be retrieved.
     func fetchWeather(for location: CLLocation) async throws -> WeatherEntity
 }

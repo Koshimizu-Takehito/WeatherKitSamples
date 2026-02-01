@@ -2,9 +2,15 @@ import SwiftUI
 
 // MARK: - Weather Gradient
 
-/// 天気状態に応じた背景グラデーションを提供する列挙型
+/// Provides background gradient colors based on weather conditions.
+///
+/// Maps ``WeatherCondition`` cases to pairs of `Color` values used by
+/// `LinearGradient` in ``HomeView`` to create a dynamic background.
 enum WeatherGradient {
-    /// HomeViewModel.Stateからグラデーションカラーを取得
+    /// Returns gradient colors derived from the current ``HomeViewModel/State``.
+    ///
+    /// Extracts the weather condition from a loaded state, falling back
+    /// to ``defaultColors`` for non-loaded states.
     static func colors(for state: HomeViewModel.State) -> [Color] {
         guard let weather = state.weather else {
             return defaultColors
@@ -12,7 +18,10 @@ enum WeatherGradient {
         return colors(for: weather.current.condition)
     }
 
-    /// 天気コンディションからグラデーションカラーを取得
+    /// Returns gradient colors for a specific weather condition.
+    ///
+    /// - Parameter condition: The current weather condition.
+    /// - Returns: An array of two colors for the linear gradient.
     static func colors(for condition: WeatherCondition) -> [Color] {
         switch condition {
         case .clear, .mostlyClear:
@@ -35,7 +44,7 @@ enum WeatherGradient {
         }
     }
 
-    /// デフォルトのグラデーションカラー
+    /// The fallback gradient used when no weather data is available.
     static var defaultColors: [Color] {
         [.blue.opacity(0.6), .cyan.opacity(0.4)]
     }

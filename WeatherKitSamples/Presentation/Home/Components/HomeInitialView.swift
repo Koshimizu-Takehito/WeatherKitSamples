@@ -2,7 +2,12 @@ import SwiftUI
 
 // MARK: - Home Initial View
 
-/// 初期状態を表示するView
+/// Displays the initial state before any weather data is loaded.
+///
+/// Prompts the user to either grant location access or search for a city.
+/// Corresponds to ``HomeViewModel/State/initial``.
+///
+/// - SeeAlso: ``HomeView`` for the parent routing logic.
 struct HomeInitialView: View {
     @Environment(HomeViewModel.self) private var viewModel
     @Binding var isShowingLocationSearch: Bool
