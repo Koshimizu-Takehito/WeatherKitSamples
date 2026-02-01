@@ -69,7 +69,7 @@ final class HomeViewModel {
     private(set) var state: State = .initial
 
     /// The display name of the current location.
-    private(set) var locationName: String = "Fetching location..."
+    private(set) var locationName: String = .init(localized: "Fetching location...")
 
     // MARK: - Dependencies
 

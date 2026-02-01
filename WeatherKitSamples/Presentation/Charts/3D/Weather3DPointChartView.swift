@@ -54,11 +54,11 @@ struct Weather3DPointChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("3D Point Chart", systemImage: "circle.hexagongrid")
+            Label(._3DPointChart, systemImage: "circle.hexagongrid")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("Hour x Temperature x Precipitation")
+            Text(.hourXTemperatureXPrecipitation)
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -67,9 +67,9 @@ struct Weather3DPointChartView: View {
     // MARK: - Color Mode Picker
 
     private var colorModePicker: some View {
-        Picker("Color by", selection: $colorMode) {
+        Picker(.colorBy, selection: $colorMode) {
             ForEach(ColorMode.allCases, id: \.self) { mode in
-                Text(mode.rawValue).tag(mode)
+                Text(verbatim: mode.rawValue).tag(mode)
             }
         }
         .pickerStyle(.segmented)
@@ -118,14 +118,14 @@ struct Weather3DPointChartView: View {
 
     private var temperatureLegend: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Color by Temperature")
+            Text(.colorByTemperature)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
             HStack(spacing: 12) {
-                legendItem(color: .cyan, text: "Low")
-                legendItem(color: .green, text: "Moderate")
-                legendItem(color: .orange, text: "High")
+                legendItem(color: .cyan, text: .low)
+                legendItem(color: .green, text: .moderate)
+                legendItem(color: .orange, text: .high)
             }
             .font(.caption2)
         }
@@ -133,7 +133,7 @@ struct Weather3DPointChartView: View {
 
     private var precipitationLegend: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Color by Precipitation")
+            Text(.colorByPrecipitation)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -148,21 +148,21 @@ struct Weather3DPointChartView: View {
 
     private var periodLegend: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Color by Time Period")
+            Text(.colorByTimePeriod)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
             HStack(spacing: 12) {
-                legendItem(color: .yellow, text: "Morning")
-                legendItem(color: .orange, text: "Afternoon")
-                legendItem(color: .purple, text: "Evening")
-                legendItem(color: .indigo, text: "Night")
+                legendItem(color: .yellow, text: .morning)
+                legendItem(color: .orange, text: .afternoon)
+                legendItem(color: .purple, text: .evening)
+                legendItem(color: .indigo, text: .night)
             }
             .font(.caption2)
         }
     }
 
-    private func legendItem(color: Color, text: String) -> some View {
+    private func legendItem(color: Color, text: LocalizedStringResource) -> some View {
         HStack(spacing: 4) {
             Circle()
                 .fill(color)

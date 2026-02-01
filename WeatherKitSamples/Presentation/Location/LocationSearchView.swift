@@ -30,7 +30,7 @@ extension LocationSearchView: View {
                 predefinedCitiesSection()
             }
             .overlay(content: searchingOverlay)
-            .navigationTitle("場所を検索")
+            .navigationTitle(Text(.searchLocation))
             .navigationBarTitleDisplayMode(.inlineOnPhone)
             .toolbar(content: cancelToolbar)
         }
@@ -44,7 +44,7 @@ extension LocationSearchView: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
 
-                TextField("都市名を入力", text: searchText)
+                TextField(.enterCityName, text: searchText)
                     .textFieldStyle(.plain)
                     .autocorrectionDisabled()
                     .onChange(of: viewModel.searchText) {
@@ -67,7 +67,7 @@ extension LocationSearchView: View {
     @ViewBuilder
     private func searchResultsSection() -> some View {
         if !viewModel.searchResults.isEmpty {
-            Section("検索結果") {
+            Section(.searchResults) {
                 ForEach(viewModel.searchResults) { result in
                     Button {
                         selectLocation(result.location, name: result.title)
@@ -90,7 +90,7 @@ extension LocationSearchView: View {
     @ViewBuilder
     private func predefinedCitiesSection() -> some View {
         if viewModel.searchText.isEmpty {
-            Section("主要都市") {
+            Section(.majorCities) {
                 ForEach(viewModel.predefinedCities) { city in
                     Button {
                         selectLocation(city.location, name: city.name)
@@ -123,7 +123,7 @@ extension LocationSearchView: View {
     @ToolbarContentBuilder
     private func cancelToolbar() -> some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button("キャンセル") {
+            Button(.cancel) {
                 dismiss()
             }
         }

@@ -24,7 +24,7 @@ extension WeatherDetailView: View {
     var body: some View {
         LazyVGrid(columns: columns, spacing: 16) {
             DetailCardView(
-                title: "UV指数",
+                title: String(localized: .uvIndex),
                 value: "\(weather.uvIndex)",
                 description: weather.uvIndexCategory,
                 systemImage: "sun.max.fill",
@@ -32,15 +32,15 @@ extension WeatherDetailView: View {
             )
 
             DetailCardView(
-                title: "湿度",
+                title: String(localized: .humidity),
                 value: humidityString,
-                description: "露点: \(dewPointString)",
+                description: String(localized: .dewPoint(dewPointString)),
                 systemImage: "humidity.fill",
                 iconColor: .cyan
             )
 
             DetailCardView(
-                title: "風速",
+                title: String(localized: .windSpeed),
                 value: windSpeedString,
                 description: windDirectionDescription,
                 systemImage: "wind",
@@ -48,7 +48,7 @@ extension WeatherDetailView: View {
             )
 
             DetailCardView(
-                title: "気圧",
+                title: String(localized: .pressure),
                 value: pressureString,
                 description: weather.pressureTrend.description,
                 systemImage: "gauge.medium",
@@ -56,7 +56,7 @@ extension WeatherDetailView: View {
             )
 
             DetailCardView(
-                title: "視程",
+                title: String(localized: .visibility),
                 value: visibilityString,
                 description: visibilityDescription,
                 systemImage: "eye.fill",
@@ -64,7 +64,7 @@ extension WeatherDetailView: View {
             )
 
             DetailCardView(
-                title: "体感温度",
+                title: String(localized: .apparentTemperature),
                 value: apparentTemperatureString,
                 description: feelsLikeDescription,
                 systemImage: "thermometer.medium",
@@ -98,7 +98,7 @@ extension WeatherDetailView: View {
     }
 
     private var windDirectionDescription: String {
-        "\(weather.windDirection)の風"
+        String(localized: .wind(weather.windDirection))
     }
 
     private var pressureString: String {
@@ -111,11 +111,11 @@ extension WeatherDetailView: View {
 
     private var visibilityDescription: String {
         if weather.visibility >= 10 {
-            "良好"
+            String(localized: .good)
         } else if weather.visibility >= 5 {
-            "普通"
+            String(localized: .moderate)
         } else {
-            "悪い"
+            String(localized: .poor)
         }
     }
 
@@ -129,11 +129,11 @@ extension WeatherDetailView: View {
         let diff = apparent - actual
 
         if abs(diff) < 2 {
-            return "実際の気温とほぼ同じ"
+            return String(localized: .similarToActualTemperature)
         } else if diff > 0 {
-            return "実際より暖かく感じる"
+            return String(localized: .feelsWarmerThanActual)
         } else {
-            return "実際より寒く感じる"
+            return String(localized: .feelsColderThanActual)
         }
     }
 }

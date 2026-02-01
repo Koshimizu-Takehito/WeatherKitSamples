@@ -73,31 +73,31 @@ final class MockWeatherDataSource: WeatherDataSourceProtocol, Sendable {
     /// Generates a 24-hour mock hourly forecast.
     private func generateHourlyForecast() -> [HourlyForecastEntity] {
         let now = Date()
-        let conditions: [(String, String, Double)] = [
-            ("sun.max.fill", "Clear", 18),
-            ("sun.max.fill", "Clear", 19),
-            ("cloud.sun.fill", "Partly Cloudy", 20),
-            ("cloud.sun.fill", "Partly Cloudy", 21),
-            ("cloud.fill", "Cloudy", 20),
-            ("cloud.fill", "Cloudy", 19),
-            ("cloud.sun.fill", "Partly Cloudy", 18),
-            ("sun.max.fill", "Clear", 17),
-            ("moon.stars.fill", "Clear", 16),
-            ("moon.fill", "Clear", 15),
-            ("moon.fill", "Clear", 14),
-            ("moon.fill", "Clear", 13),
-            ("moon.fill", "Clear", 12),
-            ("moon.fill", "Clear", 12),
-            ("sun.horizon.fill", "Clear", 13),
-            ("sun.max.fill", "Clear", 15),
-            ("sun.max.fill", "Clear", 17),
-            ("sun.max.fill", "Clear", 19),
-            ("sun.max.fill", "Clear", 21),
-            ("cloud.sun.fill", "Partly Cloudy", 22),
-            ("cloud.sun.fill", "Partly Cloudy", 22),
-            ("cloud.fill", "Cloudy", 21),
-            ("cloud.fill", "Cloudy", 20),
-            ("cloud.sun.fill", "Partly Cloudy", 19),
+        let conditions: [(String, WeatherCondition, Double)] = [
+            ("sun.max.fill", .clear, 18),
+            ("sun.max.fill", .clear, 19),
+            ("cloud.sun.fill", .partlyCloudy, 20),
+            ("cloud.sun.fill", .partlyCloudy, 21),
+            ("cloud.fill", .cloudy, 20),
+            ("cloud.fill", .cloudy, 19),
+            ("cloud.sun.fill", .partlyCloudy, 18),
+            ("sun.max.fill", .clear, 17),
+            ("moon.stars.fill", .clear, 16),
+            ("moon.fill", .clear, 15),
+            ("moon.fill", .clear, 14),
+            ("moon.fill", .clear, 13),
+            ("moon.fill", .clear, 12),
+            ("moon.fill", .clear, 12),
+            ("sun.horizon.fill", .clear, 13),
+            ("sun.max.fill", .clear, 15),
+            ("sun.max.fill", .clear, 17),
+            ("sun.max.fill", .clear, 19),
+            ("sun.max.fill", .clear, 21),
+            ("cloud.sun.fill", .partlyCloudy, 22),
+            ("cloud.sun.fill", .partlyCloudy, 22),
+            ("cloud.fill", .cloudy, 21),
+            ("cloud.fill", .cloudy, 20),
+            ("cloud.sun.fill", .partlyCloudy, 19),
         ]
 
         return conditions.enumerated().map { index, data in
@@ -105,7 +105,7 @@ final class MockWeatherDataSource: WeatherDataSourceProtocol, Sendable {
                 date: now.addingTimeInterval(Double(index) * 3600),
                 temperature: data.2,
                 symbolName: data.0,
-                condition: data.1,
+                condition: data.1.description,
                 precipitationChance: index % 5 == 0 ? 0.2 : 0.0
             )
         }
@@ -193,7 +193,7 @@ extension MockWeatherDataSource {
                     date: date,
                     temperature: temp,
                     symbolName: symbolName,
-                    condition: precipChance > 0.3 ? "Rain" : "Clear",
+                    condition: precipChance > 0.3 ? WeatherCondition.rain.description : WeatherCondition.clear.description,
                     precipitationChance: precipChance
                 )
             }

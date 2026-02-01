@@ -83,11 +83,11 @@ struct Temperature3DSurfaceChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("3D Surface Chart", systemImage: "square.3.layers.3d")
+            Label(._3DSurfaceChart, systemImage: "square.3.layers.3d")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("Day x Hour x Temperature Surface")
+            Text(.dayXHourXTemperatureSurface)
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -96,9 +96,9 @@ struct Temperature3DSurfaceChartView: View {
     // MARK: - Style Picker
 
     private var stylePickerView: some View {
-        Picker("Style", selection: $surfaceStyle) {
+        Picker(.style, selection: $surfaceStyle) {
             ForEach(SurfaceStyle.allCases, id: \.self) { style in
-                Text(style.rawValue).tag(style)
+                Text(verbatim: style.rawValue).tag(style)
             }
         }
         .pickerStyle(.segmented)
@@ -167,19 +167,19 @@ struct Temperature3DSurfaceChartView: View {
 
     // MARK: - Info View
 
+    private let surfaceDescription: LocalizedStringResource =
+        .displaysTemperatureAsAContinuousSurfaceOverADayHourGridSurfacePlotRendersMathematicalFunctionsAsSmooth3DSurfacesInterpolatingBetweenDataPointsForVisualContinuity
+
     private var infoView: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("About Surface Visualization")
+            Text(.aboutSurfaceVisualization)
                 .font(.caption)
                 .fontWeight(.medium)
                 .foregroundStyle(.secondary)
 
-            // swiftlint:disable:next line_length
-            Text(
-                "Displays temperature as a continuous surface over a day-hour grid. SurfacePlot renders mathematical functions as smooth 3D surfaces, interpolating between data points for visual continuity."
-            )
-            .font(.caption2)
-            .foregroundStyle(.tertiary)
+            Text(surfaceDescription)
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
         }
     }
 }

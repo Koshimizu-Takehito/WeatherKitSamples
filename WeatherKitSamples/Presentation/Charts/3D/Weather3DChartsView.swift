@@ -83,7 +83,7 @@ struct Weather3DChartsView: View {
             .padding()
         }
         .background(backgroundGradient.ignoresSafeArea())
-        .navigationTitle("3D Charts")
+        .navigationTitle(Text(._3DCharts))
         .navigationBarTitleDisplayMode(.inlineOnPhone)
     }
 
@@ -95,11 +95,11 @@ struct Weather3DChartsView: View {
                 .font(.system(size: 40))
                 .foregroundStyle(.secondary)
 
-            Text("Swift Charts 3D Samples")
+            Text(.swiftCharts3DSamples)
                 .font(.title2)
                 .fontWeight(.bold)
 
-            Text("Chart3D API implementation examples")
+            Text(.chart3DApiImplementationExamples)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -112,7 +112,7 @@ struct Weather3DChartsView: View {
     }
 
     private var availabilityBadge: some View {
-        Text("iOS 26+ / macOS 26+ / visionOS 26+")
+        Text(verbatim: "iOS 26+ / macOS 26+ / visionOS 26+")
             .font(.caption2)
             .fontWeight(.medium)
             .padding(.horizontal, 10)
@@ -143,7 +143,7 @@ struct Weather3DChartsView: View {
             VStack(spacing: 4) {
                 Image(systemName: tab.icon)
                     .font(.title3)
-                Text(tab.rawValue)
+                Text(verbatim: tab.rawValue)
                     .font(.caption2)
             }
             .frame(width: 70, height: 56)
@@ -225,7 +225,7 @@ struct Weather3DChartsView: View {
 
                 Spacer()
 
-                Text(markName)
+                Text(verbatim: markName)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 8)
@@ -241,12 +241,12 @@ struct Weather3DChartsView: View {
 
     private var chartInfoView: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Chart3D Component Used", systemImage: "info.circle")
+            Label(.chart3DComponentUsed, systemImage: "info.circle")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
             HStack {
-                Text(selectedTab.markName)
+                Text(verbatim: selectedTab.markName)
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .padding(.horizontal, 12)
@@ -256,7 +256,7 @@ struct Weather3DChartsView: View {
                 Spacer()
             }
 
-            Text(selectedTab.description)
+            Text(verbatim: selectedTab.description)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -270,18 +270,18 @@ struct Weather3DChartsView: View {
 
     private var chart3DFeatures: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Chart3D Features")
+            Text(.chart3DFeatures)
                 .font(.subheadline)
                 .fontWeight(.medium)
 
-            featureItem(icon: "hand.draw", text: "Rotate and zoom with gestures")
-            featureItem(icon: "cube", text: "Visualize data across 3 axes")
-            featureItem(icon: "paintbrush", text: "Style with foregroundStyle")
-            featureItem(icon: "camera", text: "Set camera position with chart3DPose")
+            featureItem(icon: "hand.draw", text: .rotateAndZoomWithGestures)
+            featureItem(icon: "cube", text: .visualizeDataAcross3Axes)
+            featureItem(icon: "paintbrush", text: .styleWithForegroundStyle)
+            featureItem(icon: "camera", text: .setCameraPositionWithChart3Dpose)
         }
     }
 
-    private func featureItem(icon: String, text: String) -> some View {
+    private func featureItem(icon: String, text: LocalizedStringResource) -> some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
                 .foregroundStyle(Color.accentColor)

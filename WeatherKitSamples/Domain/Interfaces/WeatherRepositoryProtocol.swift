@@ -49,13 +49,13 @@ enum WeatherRepositoryError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .fetchFailed(error):
-            "Failed to fetch weather data: \(error.localizedDescription)"
+            String(localized: "Failed to fetch weather data: \(error.localizedDescription)")
 
         case .invalidData:
-            "Invalid weather data received"
+            String(localized: "Invalid weather data received")
 
         case .networkError:
-            "A network error occurred"
+            String(localized: "A network error occurred")
         }
     }
 }

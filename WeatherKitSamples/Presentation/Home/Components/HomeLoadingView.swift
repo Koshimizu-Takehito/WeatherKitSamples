@@ -10,7 +10,7 @@ struct HomeLoadingView: View {
         VStack(spacing: 16) {
             ProgressView()
                 .scaleEffect(1.5)
-            Text("天気情報を取得中...")
+            Text(.fetchingWeather)
                 .foregroundStyle(.secondary)
         }
     }

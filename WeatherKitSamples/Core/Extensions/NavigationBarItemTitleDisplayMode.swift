@@ -4,7 +4,7 @@ import SwiftUI
 /// Cross-platform helpers for `NavigationBarItem.TitleDisplayMode`.
 extension NavigationBarItem.TitleDisplayMode {
     static var inlineOnPhone: Self {
-        return .inline
+        .inline
     }
 }
 #else

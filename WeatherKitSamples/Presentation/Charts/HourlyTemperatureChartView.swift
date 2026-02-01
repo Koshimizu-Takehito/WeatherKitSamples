@@ -58,11 +58,11 @@ struct HourlyTemperatureChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("Temperature Trend", systemImage: "thermometer.medium")
+            Label(.temperatureTrend, systemImage: "thermometer.medium")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("24-hour temperature changes")
+            Text(._24HourTemperatureChanges)
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -147,7 +147,7 @@ struct HourlyTemperatureChartView: View {
     private var chartOptionsView: some View {
         HStack(spacing: 16) {
             Toggle(isOn: $showArea) {
-                Label("Area", systemImage: "square.fill")
+                Label(.area, systemImage: "square.fill")
                     .font(.caption)
             }
             .toggleStyle(.button)
@@ -155,7 +155,7 @@ struct HourlyTemperatureChartView: View {
             .tint(showArea ? .orange : .gray)
 
             Toggle(isOn: $showPoints) {
-                Label("Points", systemImage: "circle.fill")
+                Label(.points, systemImage: "circle.fill")
                     .font(.caption)
             }
             .toggleStyle(.button)

@@ -37,10 +37,10 @@ extension CurrentWeatherView: View {
                 .foregroundStyle(.secondary)
 
             HStack(spacing: 16) {
-                Label("体感 \(apparentTemperatureString)", systemImage: "thermometer.medium")
+                Label(.feelsLike(apparentTemperatureString), systemImage: "thermometer.medium")
 
                 if let today = todayForecast {
-                    Label("H:\(highTemperatureString(today)) L:\(lowTemperatureString(today))", systemImage: "arrow.up.arrow.down")
+                    Label(.hL(highTemperatureString(today), lowTemperatureString(today)), systemImage: "arrow.up.arrow.down")
                 }
             }
             .font(.subheadline)

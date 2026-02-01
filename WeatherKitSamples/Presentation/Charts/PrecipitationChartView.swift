@@ -62,13 +62,19 @@ struct PrecipitationChartView: View {
 
     // MARK: - Header View
 
+    private var precipitationSubtitle: LocalizedStringResource {
+        dataType == .hourly
+            ? ._24HourPrecipitationProbability
+            : ._10DayPrecipitationProbability
+    }
+
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("Precipitation", systemImage: "drop.fill")
+            Label(.precipitation, systemImage: "drop.fill")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text(dataType == .hourly ? "24-hour precipitation probability" : "10-day precipitation probability")
+            Text(precipitationSubtitle)
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -77,9 +83,9 @@ struct PrecipitationChartView: View {
     // MARK: - Data Type Picker
 
     private var dataTypePickerView: some View {
-        Picker("Data Type", selection: $dataType) {
+        Picker(.dataType, selection: $dataType) {
             ForEach(DataType.allCases, id: \.self) { type in
-                Text(type.rawValue).tag(type)
+                Text(verbatim: type.rawValue).tag(type)
             }
         }
         .pickerStyle(.segmented)
@@ -222,14 +228,14 @@ struct PrecipitationChartView: View {
 
     private var legendView: some View {
         HStack(spacing: 16) {
-            legendItem(color: .green, text: "Low (0-30%)")
-            legendItem(color: .yellow, text: "Medium (30-50%)")
-            legendItem(color: .cyan, text: "High (50%+)")
+            legendItem(color: .green, text: .low030)
+            legendItem(color: .yellow, text: .medium3050)
+            legendItem(color: .cyan, text: .high50)
         }
         .font(.caption2)
     }
 
-    private func legendItem(color: Color, text: String) -> some View {
+    private func legendItem(color: Color, text: LocalizedStringResource) -> some View {
         HStack(spacing: 4) {
             Circle()
                 .fill(color)
@@ -251,7 +257,7 @@ struct PrecipitationChartView: View {
                 Text(data.date, format: .dateTime.hour().minute())
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(String(format: "Precipitation: %.0f%%", data.precipitationChance * 100))
+                Text(.precipitation(Int(data.precipitationChance * 100)))
                     .font(.headline)
             }
 
@@ -276,7 +282,7 @@ struct PrecipitationChartView: View {
                 Text(data.date, format: .dateTime.month().day().weekday())
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(String(format: "Precipitation: %.0f%%", data.precipitationChance * 100))
+                Text(.precipitation(Int(data.precipitationChance * 100)))
                     .font(.headline)
             }
 

@@ -42,11 +42,11 @@ struct Temperature3DBarChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("3D Temperature Chart", systemImage: "cube")
+            Label(._3DTemperatureChart, systemImage: "cube")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("Date x Time Period x Temperature")
+            Text(.dateXTimePeriodXTemperature)
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -78,20 +78,20 @@ struct Temperature3DBarChartView: View {
 
     private var legendView: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Color by Temperature")
+            Text(.colorByTemperature)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
             HStack(spacing: 16) {
-                legendItem(color: .cyan, text: "Low (<15°C)")
-                legendItem(color: .green, text: "Moderate (15-20°C)")
-                legendItem(color: .orange, text: "High (>20°C)")
+                legendItem(color: .cyan, text: .low15C)
+                legendItem(color: .green, text: .moderate1520C)
+                legendItem(color: .orange, text: .high20C)
             }
             .font(.caption2)
         }
     }
 
-    private func legendItem(color: Color, text: String) -> some View {
+    private func legendItem(color: Color, text: LocalizedStringResource) -> some View {
         HStack(spacing: 4) {
             RoundedRectangle(cornerRadius: 2)
                 .fill(color)

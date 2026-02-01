@@ -18,7 +18,7 @@ struct HomeInitialView: View {
                 .font(.system(size: 64))
                 .foregroundStyle(.secondary)
 
-            Text("天気情報を表示するには\n位置情報を許可するか\n都市を検索してください")
+            Text(.toDisplayWeatherInformationPleaseAllowLocationAccessOrSearchForACity)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
 
@@ -26,14 +26,14 @@ struct HomeInitialView: View {
                 Button {
                     Task { await viewModel.fetchCurrentWeather() }
                 } label: {
-                    Label("現在地", systemImage: "location")
+                    Label(.currentLocation, systemImage: "location")
                 }
                 .buttonStyle(.borderedProminent)
 
                 Button {
                     isShowingLocationSearch = true
                 } label: {
-                    Label("検索", systemImage: "magnifyingglass")
+                    Label(.search, systemImage: "magnifyingglass")
                 }
                 .buttonStyle(.bordered)
             }

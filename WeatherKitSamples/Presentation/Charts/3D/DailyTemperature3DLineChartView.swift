@@ -71,11 +71,11 @@ struct DailyTemperature3DLineChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("3D Temperature Trend", systemImage: "chart.line.uptrend.xyaxis")
+            Label(._3DTemperatureTrend, systemImage: "chart.line.uptrend.xyaxis")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("Compare temperature trends across days")
+            Text(.compareTemperatureTrendsAcrossDays)
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -84,7 +84,7 @@ struct DailyTemperature3DLineChartView: View {
     // MARK: - Toggle View
 
     private var toggleView: some View {
-        Toggle("Show All Days", isOn: $showAllDays)
+        Toggle(.showAllDays, isOn: $showAllDays)
             .font(.subheadline)
             .tint(.accentColor)
     }
@@ -116,7 +116,7 @@ struct DailyTemperature3DLineChartView: View {
 
     private var legendView: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Color by Day")
+            Text(.colorByDay)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -134,7 +134,7 @@ struct DailyTemperature3DLineChartView: View {
             Circle()
                 .fill(color)
                 .frame(width: 10, height: 10)
-            Text(text)
+            Text(verbatim: text)
                 .foregroundStyle(.secondary)
         }
     }
@@ -148,10 +148,10 @@ struct DailyTemperature3DLineChartView: View {
 
     private func dayLabel(for index: Int) -> String {
         switch index {
-        case 0: "Today"
-        case 1: "Tomorrow"
-        case 2: "Day After"
-        default: "Day \(index + 1)"
+        case 0: String(localized: .today)
+        case 1: String(localized: .tomorrow)
+        case 2: String(localized: .dayAfter)
+        default: String(localized: .day(index + 1))
         }
     }
 }

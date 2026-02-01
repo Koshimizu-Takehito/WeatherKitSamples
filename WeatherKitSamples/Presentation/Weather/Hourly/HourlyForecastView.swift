@@ -17,7 +17,7 @@ struct HourlyForecastView {
 extension HourlyForecastView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("時間ごとの天気", systemImage: "clock")
+            Label(.hourlyForecast, systemImage: "clock")
                 .font(.headline)
 
             ScrollView(.horizontal, showsIndicators: false) {

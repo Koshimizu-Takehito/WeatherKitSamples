@@ -34,7 +34,7 @@ extension HomeView: View {
                 .sheet(isPresented: $isShowingLocationSearch, content: locationSearchSheet)
                 .sheet(isPresented: $isShowingCharts, content: chartsSheet)
                 .navigationBarTitleDisplayMode(.inlineOnPhone)
-                .navigationTitle("天気")
+                .navigationTitle(Text(.weather))
         }
         .task(fetchCurrentWeather)
     }
@@ -96,7 +96,7 @@ extension HomeView: View {
         NavigationStack {
             WeatherChartsView().toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("閉じる") {
+                    Button(.close) {
                         isShowingCharts = false
                     }
                 }

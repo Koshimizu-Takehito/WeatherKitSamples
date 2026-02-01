@@ -84,7 +84,7 @@ extension WeatherChartsView: View {
             .padding()
         }
         .background(content: backgroundGradient)
-        .navigationTitle("Swift Charts")
+        .navigationTitle(Text(.swiftCharts))
         .navigationBarTitleDisplayMode(.inlineOnPhone)
         .navigationDestination(isPresented: $showing3DCharts, destination: charts3DDestination)
         .onChange(of: selectedTab) { _, newValue in
@@ -117,11 +117,11 @@ extension WeatherChartsView: View {
                 .font(.system(size: 40))
                 .foregroundStyle(.secondary)
 
-            Text("Swift Charts Samples")
+            Text(.swiftChartsSamples)
                 .font(.title2)
                 .fontWeight(.bold)
 
-            Text("Chart implementations using weather data")
+            Text(.chartImplementationsUsingWeatherData)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -152,7 +152,7 @@ extension WeatherChartsView: View {
         } label: {
             HStack(spacing: 6) {
                 Image(systemName: tab.icon)
-                Text(tab.rawValue)
+                Text(verbatim: tab.rawValue)
             }
             .font(.subheadline)
             .fontWeight(selectedTab == tab ? .semibold : .regular)
@@ -218,7 +218,7 @@ extension WeatherChartsView: View {
                 .font(.title2)
                 .fontWeight(.bold)
 
-            Text("3D charts using Chart3D API\navailable on iOS 26+ / macOS 26+")
+            Text(._3DChartsUsingChart3DApiAvailableOnIOS26MacOS26)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -227,7 +227,7 @@ extension WeatherChartsView: View {
                 Button {
                     showing3DCharts = true
                 } label: {
-                    Label("View 3D Charts", systemImage: "arrow.right.circle.fill")
+                    Label(.view3DCharts, systemImage: "arrow.right.circle.fill")
                         .font(.headline)
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -236,7 +236,7 @@ extension WeatherChartsView: View {
                 }
                 .buttonStyle(.plain)
             } else {
-                Text("Requires iOS 26+ / macOS 26+")
+                Text(.requiresIOS26MacOS26)
                     .font(.caption)
                     .foregroundStyle(.orange)
                     .padding()
@@ -244,7 +244,7 @@ extension WeatherChartsView: View {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Included Charts:")
+                Text(.includedCharts)
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundStyle(.secondary)
@@ -269,7 +269,7 @@ extension WeatherChartsView: View {
             Image(systemName: icon)
                 .foregroundStyle(.indigo)
                 .frame(width: 20)
-            Text(name)
+            Text(verbatim: name)
                 .font(.caption)
         }
         .padding(.horizontal, 10)
@@ -306,7 +306,7 @@ extension WeatherChartsView: View {
 
                 Spacer()
 
-                Text(description)
+                Text(verbatim: description)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 8)
@@ -322,11 +322,11 @@ extension WeatherChartsView: View {
 
     private var chartInfoView: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Swift Charts Components Used", systemImage: "info.circle")
+            Label(.swiftChartsComponentsUsed, systemImage: "info.circle")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text(selectedTab.description)
+            Text(verbatim: selectedTab.description)
                 .font(.subheadline)
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -412,13 +412,13 @@ extension WeatherChartsView: View {
 
     private func markDescription(name: String, description: String) -> some View {
         HStack(alignment: .top) {
-            Text("•")
+            Text(verbatim: "•")
                 .foregroundStyle(Color.accentColor)
             VStack(alignment: .leading) {
-                Text(name)
+                Text(verbatim: name)
                     .font(.subheadline)
                     .fontWeight(.medium)
-                Text(description)
+                Text(verbatim: description)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

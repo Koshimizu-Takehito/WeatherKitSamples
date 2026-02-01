@@ -20,7 +20,7 @@ struct HomeErrorView: View {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
 
-            Button("再試行") {
+            Button(.retry) {
                 Task { await viewModel.fetchCurrentWeather() }
             }
             .buttonStyle(.borderedProminent)

@@ -235,21 +235,21 @@ enum WeatherCondition: String, Sendable {
     /// A localized description of the weather condition.
     var description: String {
         switch self {
-        case .clear: "Clear"
-        case .mostlyClear: "Mostly Clear"
-        case .partlyCloudy: "Partly Cloudy"
-        case .cloudy: "Cloudy"
-        case .mostlyCloudy: "Mostly Cloudy"
-        case .rain: "Rain"
-        case .drizzle: "Drizzle"
-        case .heavyRain: "Heavy Rain"
-        case .snow: "Snow"
-        case .heavySnow: "Heavy Snow"
-        case .flurries: "Flurries"
-        case .thunderstorms: "Thunderstorms"
-        case .foggy: "Foggy"
-        case .haze: "Haze"
-        case .unknown: "Unknown"
+        case .clear: String(localized: .clear)
+        case .mostlyClear: String(localized: .mostlyClear)
+        case .partlyCloudy: String(localized: .partlyCloudy)
+        case .cloudy: String(localized: .cloudy)
+        case .mostlyCloudy: String(localized: .mostlyCloudy)
+        case .rain: String(localized: .rain)
+        case .drizzle: String(localized: .drizzle)
+        case .heavyRain: String(localized: .heavyRain)
+        case .snow: String(localized: .snow)
+        case .heavySnow: String(localized: .heavySnow)
+        case .flurries: String(localized: .flurries)
+        case .thunderstorms: String(localized: .thunderstorms)
+        case .foggy: String(localized: .foggy)
+        case .haze: String(localized: .haze)
+        case .unknown: String(localized: .unknown)
         }
     }
 }
@@ -276,9 +276,9 @@ enum PressureTrend: String, Sendable {
     /// A localized description of the pressure trend.
     var description: String {
         switch self {
-        case .rising: "Rising"
-        case .falling: "Falling"
-        case .steady: "Steady"
+        case .rising: String(localized: .rising)
+        case .falling: String(localized: .falling)
+        case .steady: String(localized: .steady)
         case .unknown: ""
         }
     }

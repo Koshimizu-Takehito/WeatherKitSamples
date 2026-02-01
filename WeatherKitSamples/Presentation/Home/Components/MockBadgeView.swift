@@ -8,7 +8,7 @@ import SwiftUI
 /// running with ``MockWeatherDataSource`` enabled.
 struct MockBadgeView: View {
     var body: some View {
-        Text("モックデータモード")
+        Text(.mockDataMode)
             .font(.caption)
             .padding(.horizontal, 12)
             .padding(.vertical, 4)

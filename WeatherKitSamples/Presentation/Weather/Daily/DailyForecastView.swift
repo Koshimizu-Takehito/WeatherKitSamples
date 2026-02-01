@@ -17,7 +17,7 @@ struct DailyForecastView {
 extension DailyForecastView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("10日間の天気", systemImage: "calendar")
+            Label(._10DayForecast, systemImage: "calendar")
                 .font(.headline)
 
             VStack(spacing: 0) {

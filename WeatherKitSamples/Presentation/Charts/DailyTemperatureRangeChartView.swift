@@ -64,11 +64,11 @@ struct DailyTemperatureRangeChartView: View {
 
     private var headerView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Label("10-Day Temperature", systemImage: "calendar")
+            Label(._10DayTemperature, systemImage: "calendar")
                 .font(.headline)
                 .foregroundStyle(.secondary)
 
-            Text("High and low temperature range")
+            Text(.highAndLowTemperatureRange)
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
@@ -209,9 +209,9 @@ struct DailyTemperatureRangeChartView: View {
     // MARK: - Style Picker
 
     private var stylePickerView: some View {
-        Picker("Style", selection: $chartStyle) {
+        Picker(.style, selection: $chartStyle) {
             ForEach(ChartStyleType.allCases, id: \.self) { style in
-                Text(style.rawValue).tag(style)
+                Text(verbatim: style.rawValue).tag(style)
             }
         }
         .pickerStyle(.segmented)

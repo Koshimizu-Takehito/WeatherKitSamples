@@ -90,11 +90,11 @@ final class LocationRepository: NSObject, LocationRepositoryProtocol, @unchecked
     /// to a human-readable place name.
     ///
     /// - Parameter location: The geographic coordinates to reverse geocode.
-    /// - Returns: A place name string, or "Unknown Location" if unavailable.
+    /// - Returns: A place name string, or a localized "Unknown Location" if unavailable.
     /// - Throws: ``LocationRepositoryError/searchFailed(underlying:)`` on error.
     func getLocationName(for location: CLLocation) async throws -> String {
         guard let request = MKReverseGeocodingRequest(location: location) else {
-            return "Unknown Location"
+            return String(localized: .unknownLocation)
         }
 
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
@@ -105,7 +105,7 @@ final class LocationRepository: NSObject, LocationRepositoryProtocol, @unchecked
                 }
 
                 guard let item = items?.first else {
-                    continuation.resume(returning: "Unknown Location")
+                    continuation.resume(returning: String(localized: .unknownLocation))
                     return
                 }
 
@@ -116,7 +116,7 @@ final class LocationRepository: NSObject, LocationRepositoryProtocol, @unchecked
                 }
 
                 // Fallback to generic location description
-                continuation.resume(returning: "Unknown Location")
+                continuation.resume(returning: String(localized: .unknownLocation))
             }
         }
     }

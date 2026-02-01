@@ -76,16 +76,16 @@ enum LocationRepositoryError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .denied:
-            "Location access denied. Please enable location services in Settings."
+            String(localized: "Location access denied. Please enable location services in Settings.")
 
         case .unknown:
-            "Failed to determine location."
+            String(localized: "Failed to determine location.")
 
         case .geocodingFailed:
-            "Failed to retrieve place name."
+            String(localized: "Failed to retrieve place name.")
 
         case let .searchFailed(error):
-            "Location search failed: \(error.localizedDescription)"
+            String(localized: "Location search failed: \(error.localizedDescription)")
         }
     }
 }

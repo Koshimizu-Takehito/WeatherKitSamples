@@ -19,12 +19,12 @@ extension WeatherAttributionView: View {
     var body: some View {
         VStack(spacing: 4) {
             if isMockDataEnabled {
-                Text("モックデータを使用中")
+                Text(.usingMockData)
                     .font(.caption2)
             } else {
                 Image(systemName: "apple.logo")
                     .font(.caption)
-                Text("Weather")
+                Text(verbatim: "Weather")
                     .font(.caption2)
             }
         }
