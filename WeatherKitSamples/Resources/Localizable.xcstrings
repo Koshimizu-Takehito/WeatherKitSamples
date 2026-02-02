@@ -289,18 +289,6 @@
         }
       }
     },
-    "Cancel" : {
-      "comment" : "場所検索画面: キャンセルボタン",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "キャンセル"
-          }
-        }
-      }
-    },
     "Chart implementations using weather data" : {
       "comment" : "チャートギャラリー: ヘッダーサブタイトル",
       "extractionState" : "manual",
@@ -357,18 +345,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "晴れ"
-          }
-        }
-      }
-    },
-    "Close" : {
-      "comment" : "チャートシート: 閉じるボタン",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "閉じる"
           }
         }
       }

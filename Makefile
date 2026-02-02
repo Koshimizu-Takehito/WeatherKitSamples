@@ -6,7 +6,7 @@
 # Project settings
 PROJECT_NAME := WeatherKitSamples
 SCHEME := WeatherKitSamples
-DESTINATION_IOS := platform=iOS Simulator,name=iPhone 16,OS=latest
+DESTINATION_IOS := platform=iOS Simulator,name=iPhone 17 Pro,OS=latest
 DESTINATION_MACOS := platform=macOS
 
 # ============================================================================

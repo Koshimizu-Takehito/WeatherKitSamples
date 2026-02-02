@@ -23,12 +23,9 @@ struct HomeToolbarContent: ToolbarContent {
         ToolbarItem(placement: .primaryAction) { chartsButton }
         ToolbarItem(placement: .navigation) { locationButton }
         #else
-        ToolbarItem(placement: .topBarTrailing) {
-            HStack(spacing: 16) {
-                chartsButton
-                searchButton
-            }
-        }
+        ToolbarItem(placement: .topBarTrailing) { searchButton }
+        ToolbarSpacer(.fixed)
+        ToolbarItem(placement: .topBarTrailing) { chartsButton }
         ToolbarItem(placement: .topBarLeading) { locationButton }
         #endif
     }

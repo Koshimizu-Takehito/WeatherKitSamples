@@ -23,7 +23,7 @@ struct HomeErrorView: View {
             Button(.retry) {
                 Task { await viewModel.fetchCurrentWeather() }
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.glassProminent)
         }
         .padding()
     }

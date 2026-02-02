@@ -28,14 +28,14 @@ struct HomeInitialView: View {
                 } label: {
                     Label(.currentLocation, systemImage: "location")
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.glassProminent)
 
                 Button {
                     isShowingLocationSearch = true
                 } label: {
                     Label(.search, systemImage: "magnifyingglass")
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.glass)
             }
         }
         .padding()

@@ -123,7 +123,7 @@ extension LocationSearchView: View {
     @ToolbarContentBuilder
     private func cancelToolbar() -> some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
-            Button(.cancel) {
+            Button(role: .cancel) {
                 dismiss()
             }
         }

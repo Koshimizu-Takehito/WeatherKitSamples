@@ -35,8 +35,16 @@ extension HomeView: View {
                 .sheet(isPresented: $isShowingCharts, content: chartsSheet)
                 .navigationBarTitleDisplayMode(.inlineOnPhone)
                 .navigationTitle(Text(.weather))
+                .navigationSubtitle(navigationSubtitle)
         }
         .task(fetchCurrentWeather)
+    }
+
+    private var navigationSubtitle: String {
+        if case .loaded = viewModel.state {
+            return viewModel.locationName
+        }
+        return ""
     }
 
     private func fetchCurrentWeather() async {
@@ -96,7 +104,7 @@ extension HomeView: View {
         NavigationStack {
             WeatherChartsView().toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(.close) {
+                    Button(role: .close) {
                         isShowingCharts = false
                     }
                 }
